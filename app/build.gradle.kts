@@ -51,4 +51,9 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
+
+    implementation ("com.microsoft.sqlserver:mssql-jdbc:9.4.1.jre8")
+    implementation ("androidx.appcompat:appcompat:1.3.0")
+    implementation ("androidx.constraintlayout:constraintlayout:2.0.4")
+
 }
