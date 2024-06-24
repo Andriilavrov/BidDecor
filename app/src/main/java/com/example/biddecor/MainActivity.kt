@@ -1,6 +1,7 @@
 package com.example.biddecor
 
 import android.os.Bundle
+import android.widget.Toast
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
@@ -8,10 +9,17 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.example.biddecor.databinding.ActivityMainBinding
+import com.example.biddecor.model.User
+import com.example.biddecor.network.RetrofitClient
+import com.example.biddecor.network.UserService
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
+    private lateinit var userService: UserService
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,5 +39,32 @@ class MainActivity : AppCompatActivity() {
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
+
+        val retrofit = RetrofitClient.instance
+        userService = retrofit.create(UserService::class.java)
+        fetchAllUsers()
+    }
+
+    private fun fetchAllUsers() {
+        val call = userService.getAllUsers()
+        call.enqueue(object : Callback<List<User>> {
+            override fun onResponse(call: Call<List<User>>, response: Response<List<User>>) {
+                if (response.isSuccessful) {
+                    val users = response.body()
+                    // Обробка отриманих даних (наприклад, відображення у RecyclerView)
+                    users?.let {
+                        for (user in it) {
+                            println("User: $user")
+                        }
+                    }
+                } else {
+                    Toast.makeText(this@MainActivity, "Не вдалося отримати дані", Toast.LENGTH_SHORT).show()
+                }
+            }
+
+            override fun onFailure(call: Call<List<User>>, t: Throwable) {
+                Toast.makeText(this@MainActivity, "Сталася помилка при отриманні даних", Toast.LENGTH_SHORT).show()
+            }
+        })
     }
 }

@@ -9,5 +9,6 @@ public class App
     {
         Javalin app = Javalin.create().start(7000);
         UserController userController = new UserController();
+        app.get("/Users", ctx -> userController.getAllUsers(ctx));
     }
 }
