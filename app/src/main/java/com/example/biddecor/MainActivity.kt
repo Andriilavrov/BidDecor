@@ -1,6 +1,7 @@
 package com.example.biddecor
 
 import android.os.Bundle
+import android.widget.Button
 import android.widget.Toast
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.appcompat.app.AppCompatActivity
@@ -42,8 +43,18 @@ class MainActivity : AppCompatActivity() {
 
         val retrofit = RetrofitClient.instance
         userService = retrofit.create(UserService::class.java)
-        fetchAllUsers()
+
+        val button: Button = findViewById(R.id.confirm_button)
+
+        button.setOnClickListener{
+            fetchAllUsers()
+        }
+
+
+
     }
+
+
 
     private fun fetchAllUsers() {
         val call = userService.getAllUsers()
@@ -58,12 +69,13 @@ class MainActivity : AppCompatActivity() {
                         }
                     }
                 } else {
-                    Toast.makeText(this@MainActivity, "Не вдалося отримати дані", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this@MainActivity, "Не вдалося отримати дані", Toast.LENGTH_LONG).show()
                 }
             }
 
             override fun onFailure(call: Call<List<User>>, t: Throwable) {
-                Toast.makeText(this@MainActivity, "Сталася помилка при отриманні даних", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this@MainActivity, "Сталася помилка при отриманні даних", Toast.LENGTH_LONG).show()
+                t.printStackTrace()
             }
         })
     }
