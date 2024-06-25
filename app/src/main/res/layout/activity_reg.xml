@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#FFE2C8"
+    tools:context=".AuthActivity">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/inter_semibold"
+        android:textColor="@color/black"
+        android:textSize="30sp"
+        android:text="Реєстрація"
+        android:layout_gravity="center"
+        android:layout_marginTop="110dp"/>
+
+    <EditText
+        android:id="@+id/userName"
+        android:layout_width="280dp"
+        android:layout_height="40dp"
+        android:layout_gravity="center"
+        android:layout_marginTop="65dp"
+        android:ems="10"
+        android:inputType="text"
+        android:textColor="@color/black"
+        android:hint="Ім'я" />
+
+    <EditText
+        android:id="@+id/userEmail"
+        android:layout_width="280dp"
+        android:layout_height="40dp"
+        android:layout_gravity="center"
+        android:layout_marginTop="25dp"
+        android:ems="10"
+        android:inputType="textEmailAddress"
+        android:textColor="@color/black"
+        android:hint="Електронна пошта"/>
+
+    <EditText
+        android:id="@+id/userPassword"
+        android:layout_width="280dp"
+        android:layout_height="40dp"
+        android:ems="10"
+        android:textColor="@color/black"
+        android:inputType="textPassword"
+        android:layout_marginTop="25dp"
+        android:layout_gravity="center"
+        android:hint="Пароль"/>
+
+    <EditText
+        android:id="@+id/userPasswordConfirm"
+        android:layout_width="280dp"
+        android:layout_height="40dp"
+        android:ems="10"
+        android:textColor="@color/black"
+        android:inputType="textPassword"
+        android:layout_marginTop="25dp"
+        android:layout_gravity="center"
+        android:hint="Підтвердіть пароль"/>
+
+    <Button
+        android:id="@+id/enterButton"
+        android:layout_width="150dp"
+        android:layout_height="45dp"
+        android:layout_gravity="center"
+        android:layout_marginTop="120dp"
+        android:backgroundTint="#5ACD57"
+        android:fontFamily="@font/inter_semibold"
+        android:text="Увійти"
+        android:textColor="@color/black"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:cornerRadius="20dp" />
+
+    <Button
+        android:id="@+id/googleButon"
+        android:layout_width="300dp"
+        android:layout_height="75dp"
+        android:layout_gravity="center"
+        android:layout_marginTop="45dp"
+        app:cornerRadius="20dp"
+        android:backgroundTint="@color/white"
+        android:fontFamily="@font/inter_semibold"
+        android:text="Авторизуватися\nчерез Google"
+        android:textColor="@color/black"
+        />
+
+    <Button
+        android:id="@+id/regButton"
+        android:layout_width="285dp"
+        android:layout_height="55dp"
+        android:layout_gravity="center"
+        android:layout_marginTop="60dp"
+        android:backgroundTint="#CD9057"
+        app:cornerRadius="20dp"
+        android:fontFamily="@font/inter_semibold"
+        android:textColor="@color/black"
+        android:text="Зареєструватись" />
+
+</LinearLayout>
