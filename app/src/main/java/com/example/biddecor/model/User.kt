@@ -5,7 +5,7 @@ class User(
     val userName: String,
     val email: String,
     val password: String,
-    val ImageProfileRef: String?
+    val ImageProfileRef: String? = null
 ) {
 
 }

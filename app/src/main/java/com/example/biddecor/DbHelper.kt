@@ -10,72 +10,82 @@ import com.example.biddecor.model.Lot
 import com.example.biddecor.model.Message
 import com.example.biddecor.model.User
 
-class DbHelper(val context: Context, val factory: SQLiteDatabase.CursorFactory?) :
+class DbHelper(val context: Context, factory: SQLiteDatabase.CursorFactory?) :
     SQLiteOpenHelper(context, "biddecor", factory, 1) {
 
-    override fun onCreate(db: SQLiteDatabase?) {
-        db!!.execSQL("""
+    override fun onCreate(db: SQLiteDatabase) {
+        db.execSQL(
+            """
             CREATE TABLE User (
-                userId INT PRIMARY KEY AUTOINCREMENT,
+                userId INTEGER PRIMARY KEY AUTOINCREMENT,
                 userName TEXT,
                 email TEXT,
                 password TEXT,
                 ImageProfileRef TEXT DEFAULT NULL
             );
-            """)
-        db!!.execSQL("""
+            """
+        )
+        db.execSQL(
+            """
             CREATE TABLE Lot (
-                lotId INT PRIMARY KEY AUTOINCREMENT,
-                userId INT,
+                lotId INTEGER PRIMARY KEY AUTOINCREMENT,
+                userId INTEGER,
                 startPrice DECIMAL(10, 2),
                 buyOutPrice DECIMAL(10, 2) DEFAULT NULL,
                 description TEXT,
                 deadline DATETIME,
                 category TEXT,
                 ImageDataRef TEXT,
-                FOREIGN KEY (userId) REFERENCES Users(userId)
+                FOREIGN KEY (userId) REFERENCES User(userId)
             );
-            """)
-        db!!.execSQL("""
+            """
+        )
+        db.execSQL(
+            """
             CREATE TABLE Bid (
-                bidId INT PRIMARY KEY AUTOINCREMENT,
+                bidId INTEGER PRIMARY KEY AUTOINCREMENT,
                 bidDate DATETIME,
                 bidValue DECIMAL(10, 2),
-                userId INT,
-                lotId INT,
-                FOREIGN KEY (userId) REFERENCES Users(userId),
+                userId INTEGER,
+                lotId INTEGER,
+                FOREIGN KEY (userId) REFERENCES User(userId),
                 FOREIGN KEY (lotId) REFERENCES Lot(lotId)
             );
-            """)
-        db!!.execSQL("""
+            """
+        )
+        db.execSQL(
+            """
             CREATE TABLE Message (
-                messageId INT PRIMARY KEY AUTOINCREMENT,
-                customerId INT PRIMARY KEY AUTOINCREMENT,
-                ownerId INT,
-                lotId INT,
+                messageId INTEGER PRIMARY KEY AUTOINCREMENT,
+                customerId INTEGER,
+                ownerId INTEGER,
+                lotId INTEGER,
                 message TEXT,
-                FOREIGN KEY (customerId) REFERENCES Users(userId),
-                FOREIGN KEY (ownerId) REFERENCES Users(userId),
+                FOREIGN KEY (customerId) REFERENCES User(userId),
+                FOREIGN KEY (ownerId) REFERENCES User(userId),
                 FOREIGN KEY (lotId) REFERENCES Lot(lotId)
             );
-            """)
-        db!!.execSQL("""
+            """
+        )
+        db.execSQL(
+            """
             CREATE TABLE Favorite (
-                favoriteId INT PRIMARY KEY AUTOINCREMENT,
-                userId INT,
-                lotId INT,
-                FOREIGN KEY (userId) REFERENCES Users(userId),
+                favoriteId INTEGER PRIMARY KEY AUTOINCREMENT,
+                userId INTEGER,
+                lotId INTEGER,
+                FOREIGN KEY (userId) REFERENCES User(userId),
                 FOREIGN KEY (lotId) REFERENCES Lot(lotId)
             );
-            """)
+            """
+        )
     }
 
-    override fun onUpgrade(db: SQLiteDatabase?, p1: Int, p2: Int) {
-        db!!.execSQL("DROP TABLE IF EXISTS User")
-        db!!.execSQL("DROP TABLE IF EXISTS Lot")
-        db!!.execSQL("DROP TABLE IF EXISTS Bid")
-        db!!.execSQL("DROP TABLE IF EXISTS Message")
-        db!!.execSQL("DROP TABLE IF EXISTS Favorite")
+    override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
+        db.execSQL("DROP TABLE IF EXISTS User")
+        db.execSQL("DROP TABLE IF EXISTS Lot")
+        db.execSQL("DROP TABLE IF EXISTS Bid")
+        db.execSQL("DROP TABLE IF EXISTS Message")
+        db.execSQL("DROP TABLE IF EXISTS Favorite")
 
         onCreate(db)
     }
@@ -110,7 +120,7 @@ class DbHelper(val context: Context, val factory: SQLiteDatabase.CursorFactory?)
     fun addBid(bid: Bid) {
         val values = ContentValues()
         values.put("bidDate", bid.bidDate)
-        values.put("vidValue", bid.vidValue)
+        values.put("bidValue", bid.bidValue) // Fixed typo from "vidValue"
         values.put("userId", bid.userId)
         values.put("lotId", bid.lotId)
 
@@ -143,4 +153,12 @@ class DbHelper(val context: Context, val factory: SQLiteDatabase.CursorFactory?)
 
         db.close()
     }
+
+    fun getUser(login: String, pass: String): Boolean {
+        val db = this.readableDatabase
+        val result =
+            db.rawQuery("SELECT * FROM User WHERE login = '$login' AND pass = '$pass'", null)
+        return result.moveToFirst()
+    }
+
 }
