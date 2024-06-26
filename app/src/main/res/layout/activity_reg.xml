@@ -64,13 +64,13 @@
 
     <Button
         android:id="@+id/enterButton"
-        android:layout_width="150dp"
+        android:layout_width="285dp"
         android:layout_height="48dp"
         android:layout_gravity="center"
         android:layout_marginTop="115dp"
         android:backgroundTint="#5ACD57"
         android:fontFamily="@font/inter_semibold"
-        android:text="Увійти"
+        android:text="Зареєструватись"
         android:textColor="@color/black"
         android:textSize="20sp"
         android:textStyle="bold"
@@ -91,7 +91,7 @@
 
     <Button
         android:id="@+id/regButton"
-        android:layout_width="285dp"
+        android:layout_width="150dp"
         android:layout_height="55dp"
         android:layout_gravity="center"
         android:layout_marginTop="60dp"
@@ -99,6 +99,6 @@
         app:cornerRadius="20dp"
         android:fontFamily="@font/inter_semibold"
         android:textColor="@color/black"
-        android:text="Зареєструватись" />
+        android:text="Увійти" />
 
 </LinearLayout>

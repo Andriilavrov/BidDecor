@@ -4,26 +4,26 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:background="#FFE2C8"
+    android:orientation="vertical"
     tools:context=".AuthActivity">
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:fontFamily="@font/inter_semibold"
-        android:textColor="@color/black"
-        android:textSize="30sp"
-        android:text="@string/AuthTitle"
         android:layout_gravity="center"
-        android:layout_marginTop="275dp"/>
+        android:layout_marginTop="275dp"
+        android:fontFamily="@font/inter_semibold"
+        android:text="@string/AuthTitle"
+        android:textColor="@color/black"
+        android:textSize="30sp" />
+
 
     <EditText
         android:id="@+id/userEmail"
         android:layout_width="280dp"
         android:layout_height="48dp"
         android:layout_gravity="center"
-        android:layout_marginTop="45dp"
         android:ems="10"
         android:hint="Електронна пошта"
         android:inputType="textEmailAddress"
@@ -60,12 +60,11 @@
         android:layout_height="75dp"
         android:layout_gravity="center"
         android:layout_marginTop="45dp"
-        app:cornerRadius="20dp"
         android:backgroundTint="@color/white"
         android:fontFamily="@font/inter_semibold"
         android:text="Авторизуватися\nчерез Google"
         android:textColor="@color/black"
-         />
+        app:cornerRadius="20dp" />
 
     <Button
         android:id="@+id/regButton"
@@ -74,9 +73,9 @@
         android:layout_gravity="center"
         android:layout_marginTop="60dp"
         android:backgroundTint="#CD9057"
-        app:cornerRadius="20dp"
         android:fontFamily="@font/inter_semibold"
+        android:text="Зареєструватись"
         android:textColor="@color/black"
-        android:text="Зареєструватись" />
+        app:cornerRadius="20dp" />
 
 </LinearLayout>
