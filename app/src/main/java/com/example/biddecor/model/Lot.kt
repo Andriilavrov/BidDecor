@@ -4,9 +4,11 @@ import java.time.LocalDateTime
 
 class Lot(
     val lotId: Int?,
-    val userId: Int,
+    val ownerId: Int,
+    val lastCustomerId: Int?,
     val startPrice: Double,
     val buyOutPrice: Double?,
+    val title : String,
     val description: String,
     val deadline: String,
     val category: String,
