@@ -16,7 +16,7 @@
         android:textSize="30sp"
         android:text="Реєстрація"
         android:layout_gravity="center"
-        android:layout_marginTop="110dp"/>
+        android:layout_marginTop="10dp"/>
 
     <EditText
         android:id="@+id/userName"
@@ -67,7 +67,7 @@
         android:layout_width="285dp"
         android:layout_height="55dp"
         android:layout_gravity="center"
-        android:layout_marginTop="115dp"
+        android:layout_marginTop="15dp"
         android:backgroundTint="#5ACD57"
         android:fontFamily="@font/inter_semibold"
         android:text="Зареєструватися"
