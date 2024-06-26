@@ -4,6 +4,10 @@ import android.content.ContentValues
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
+import com.example.biddecor.model.Bid
+import com.example.biddecor.model.Favorite
+import com.example.biddecor.model.Lot
+import com.example.biddecor.model.Message
 import com.example.biddecor.model.User
 
 class DbHelper(val context: Context, val factory: SQLiteDatabase.CursorFactory?) :
@@ -16,7 +20,7 @@ class DbHelper(val context: Context, val factory: SQLiteDatabase.CursorFactory?)
                 userName TEXT,
                 email TEXT,
                 password TEXT,
-                ImageProfileRef TEXT
+                ImageProfileRef TEXT DEFAULT NULL
             );
             """)
         db!!.execSQL("""
@@ -24,7 +28,7 @@ class DbHelper(val context: Context, val factory: SQLiteDatabase.CursorFactory?)
                 lotId INT PRIMARY KEY AUTOINCREMENT,
                 userId INT,
                 startPrice DECIMAL(10, 2),
-                buyOutPrice DECIMAL(10, 2),
+                buyOutPrice DECIMAL(10, 2) DEFAULT NULL,
                 description TEXT,
                 deadline DATETIME,
                 category TEXT,
@@ -44,7 +48,8 @@ class DbHelper(val context: Context, val factory: SQLiteDatabase.CursorFactory?)
             );
             """)
         db!!.execSQL("""
-            CREATE TABLE Chat (
+            CREATE TABLE Message (
+                messageId INT PRIMARY KEY AUTOINCREMENT,
                 customerId INT PRIMARY KEY AUTOINCREMENT,
                 ownerId INT,
                 lotId INT,
@@ -56,17 +61,11 @@ class DbHelper(val context: Context, val factory: SQLiteDatabase.CursorFactory?)
             """)
         db!!.execSQL("""
             CREATE TABLE Favorite (
-                userId INT PRIMARY KEY AUTOINCREMENT,
+                favoriteId INT PRIMARY KEY AUTOINCREMENT,
+                userId INT,
                 lotId INT,
                 FOREIGN KEY (userId) REFERENCES Users(userId),
                 FOREIGN KEY (lotId) REFERENCES Lot(lotId)
-            );
-            """)
-        db!!.execSQL("""
-            CREATE TABLE Admin (
-                adminId INT PRIMARY KEY AUTOINCREMENT,
-                email TEXT,
-                password TEXT
             );
             """)
     }
@@ -75,21 +74,72 @@ class DbHelper(val context: Context, val factory: SQLiteDatabase.CursorFactory?)
         db!!.execSQL("DROP TABLE IF EXISTS User")
         db!!.execSQL("DROP TABLE IF EXISTS Lot")
         db!!.execSQL("DROP TABLE IF EXISTS Bid")
-        db!!.execSQL("DROP TABLE IF EXISTS Chat")
+        db!!.execSQL("DROP TABLE IF EXISTS Message")
         db!!.execSQL("DROP TABLE IF EXISTS Favorite")
-        db!!.execSQL("DROP TABLE IF EXISTS Admin")
 
         onCreate(db)
     }
 
     fun addUser(user: User) {
         val values = ContentValues()
-        values.put("login", user.userName)
-        values.put("email", user.userEmal)
-        values.put("pass", user.password)
+        values.put("userName", user.userName)
+        values.put("email", user.email)
+        values.put("password", user.password)
 
         val db = this.writableDatabase
-        db.insert("users", null, values)
+        db.insert("User", null, values)
+
+        db.close()
+    }
+
+    fun addLot(lot: Lot) {
+        val values = ContentValues()
+        values.put("userId", lot.userId)
+        values.put("startPrice", lot.startPrice)
+        values.put("description", lot.description)
+        values.put("deadline", lot.deadline)
+        values.put("category", lot.category)
+        values.put("ImageDataRef", lot.ImageDataRef)
+
+        val db = this.writableDatabase
+        db.insert("Lot", null, values)
+
+        db.close()
+    }
+
+    fun addBid(bid: Bid) {
+        val values = ContentValues()
+        values.put("bidDate", bid.bidDate)
+        values.put("vidValue", bid.vidValue)
+        values.put("userId", bid.userId)
+        values.put("lotId", bid.lotId)
+
+        val db = this.writableDatabase
+        db.insert("Bid", null, values)
+
+        db.close()
+    }
+
+    fun addMessage(message: Message) {
+        val values = ContentValues()
+        values.put("customerId", message.customerId)
+        values.put("ownerId", message.ownerId)
+        values.put("lotId", message.lotId)
+        values.put("message", message.message)
+
+        val db = this.writableDatabase
+        db.insert("Message", null, values)
+
+        db.close()
+    }
+
+    fun addFavorite(favorite: Favorite) {
+        val values = ContentValues()
+        values.put("userId", favorite.userId)
+        values.put("lotId", favorite.lotId)
+
+        val db = this.writableDatabase
+        db.insert("Favorite", null, values)
 
         db.close()
     }

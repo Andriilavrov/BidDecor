@@ -1,6 +1,7 @@
 package com.example.biddecor.model
 
-class Chat(
+class Message(
+    val messageId: Int,
     val customerId: Int,
     val ownerId: Int,
     val lotId: Int,
