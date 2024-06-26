@@ -95,6 +95,7 @@ class DbHelper(val context: Context, factory: SQLiteDatabase.CursorFactory?) :
         values.put("userName", user.userName)
         values.put("email", user.email)
         values.put("password", user.password)
+        values.put("ImageProfileRef", user.ImageProfileRef)
 
         val db = this.writableDatabase
         db.insert("User", null, values)

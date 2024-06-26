@@ -1,14 +1,12 @@
 package com.example.biddecor
 
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.widget.Button
-import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
-import com.google.android.gms.common.SignInButton
 import android.widget.Toast
+import com.example.biddecor.model.User
 
 class AuthActivity : AppCompatActivity() {
     private lateinit var googleSignInHelper: GoogleSignInHelper
@@ -24,21 +22,34 @@ class AuthActivity : AppCompatActivity() {
         }
 
         googleSignInHelper = GoogleSignInHelper(this)
-        findViewById<SignInButton>(R.id.googleButton).setOnClickListener {
+        findViewById<Button>(R.id.googleButton).setOnClickListener {
             googleSignInHelper.signIn(this)
         }
     }
+
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
         googleSignInHelper.handleSignInResult(data,
             onSuccess = { account ->
-                // Handle successful sign-in
+                val email = account.email ?: ""
+                val name = account.displayName ?: ""
+                val photoUrl: Uri? = account.photoUrl
+                val photoUrlString = photoUrl?.toString() ?: null
+
+                val user = User(null, name, email, "", photoUrlString)
+                val db = DbHelper(this, null)
+                db.addUser(user)
+
                 Toast.makeText(this, "Signed in as: ${account.displayName}", Toast.LENGTH_LONG).show()
+
+                val intent = Intent(this, MainActivity::class.java)
+                startActivity(intent)
             },
             onFailure = { exception ->
                 // Handle sign-in failure
-                Toast.makeText(this, "Sign-in failed: ${exception.message}", Toast.LENGTH_LONG).show()
+                Toast.makeText(this, "Sign-in failed: ${exception.message}", Toast.LENGTH_SHORT).show()
             })
     }
+
 }

@@ -21,7 +21,7 @@ class GoogleSignInHelper(private val context: Context) {
     init {
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
             .requestEmail()
-            .requestIdToken(context.getString(R.string.CLIENT_ID))
+            .requestIdToken(context.getString(R.string.WEB_CLIENT_ID))
             .build()
 
         googleSignInClient = GoogleSignIn.getClient(context, gso)
