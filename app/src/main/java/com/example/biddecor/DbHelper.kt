@@ -121,7 +121,7 @@ class DbHelper(val context: Context, factory: SQLiteDatabase.CursorFactory?) :
     fun addBid(bid: Bid) {
         val values = ContentValues()
         values.put("bidDate", bid.bidDate)
-        values.put("bidValue", bid.bidValue) // Fixed typo from "vidValue"
+        values.put("bidValue", bid.bidValue)
         values.put("userId", bid.userId)
         values.put("lotId", bid.lotId)
 
@@ -166,29 +166,22 @@ class DbHelper(val context: Context, factory: SQLiteDatabase.CursorFactory?) :
         val db = this.readableDatabase
         var user: User? = null
 
-        // Запрос к таблице User по email
         val cursor = db.rawQuery("SELECT * FROM User WHERE email = ?", arrayOf(email))
 
-        // Если курсор не пустой, извлекаем данные
         if (cursor.moveToFirst()) {
-            val userIdInd = cursor.getColumnIndex("userId")
             val userNameInd = cursor.getColumnIndex("userName")
             val userEmailInd = cursor.getColumnIndex("email")
             val userPasswordInd = cursor.getColumnIndex("password")
             val imageProfileRefInd = cursor.getColumnIndex("ImageProfileRef")
 
-//            val userId = cursor.getInt(userIdInd)
             val userName = cursor.getString(userNameInd)
             val userEmail = cursor.getString(userEmailInd)
             val userPassword = cursor.getString(userPasswordInd)
             val imageProfileRef = cursor.getString(imageProfileRefInd)
 
-            // Создание объекта User
-            user = User(null, userEmail, userPassword, imageProfileRef)
-//            user.userId = userId  // Установка ID пользователя
+            user = User(null, userName, userEmail, userPassword, imageProfileRef)
         }
 
-        // Закрываем курсор и базу данных
         cursor.close()
         db.close()
 
