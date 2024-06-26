@@ -6,9 +6,7 @@ import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
-import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import android.widget.Toast
 import com.example.biddecor.model.User
 import org.json.JSONObject
 import java.io.File
@@ -19,6 +17,7 @@ class AuthActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_auth)
+
 
         val userEmail: EditText = findViewById(R.id.userEmail)
         val userPass: EditText = findViewById(R.id.userPassword)

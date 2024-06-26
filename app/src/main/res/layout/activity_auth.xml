@@ -4,8 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:background="#FFE2C8"
+    android:orientation="vertical"
     tools:context=".AuthActivity">
 
     <ScrollView
@@ -15,7 +15,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical" >
+            android:orientation="vertical">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -27,19 +27,6 @@
                 android:textColor="@color/black"
                 android:textSize="30sp" />
 
-
-    <Button
-        android:id="@+id/googleButton"
-        android:layout_width="300dp"
-        android:layout_height="75dp"
-        android:layout_gravity="center"
-        android:layout_marginTop="45dp"
-        app:cornerRadius="20dp"
-        android:backgroundTint="@color/white"
-        android:fontFamily="@font/inter_semibold"
-        android:text="Авторизуватися\nчерез Google"
-        android:textColor="@color/black"
-         />
 
             <EditText
                 android:id="@+id/userEmail"
@@ -65,6 +52,18 @@
                 android:textColor="@color/black" />
 
             <Button
+                android:id="@+id/googleButton"
+                android:layout_width="300dp"
+                android:layout_height="75dp"
+                android:layout_gravity="center"
+                android:layout_marginTop="45dp"
+                android:backgroundTint="@color/white"
+                android:fontFamily="@font/inter_semibold"
+                android:text="Авторизуватися\nчерез Google"
+                android:textColor="@color/black"
+                app:cornerRadius="20dp" />
+
+            <Button
                 android:id="@+id/enterButton"
                 android:layout_width="150dp"
                 android:layout_height="48dp"
@@ -77,7 +76,6 @@
                 android:textSize="20sp"
                 android:textStyle="bold"
                 app:cornerRadius="20dp" />
-
 
 
             <Button

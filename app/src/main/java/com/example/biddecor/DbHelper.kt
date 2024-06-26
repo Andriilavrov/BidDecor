@@ -30,13 +30,16 @@ class DbHelper(val context: Context, factory: SQLiteDatabase.CursorFactory?) :
             CREATE TABLE Lot (
                 lotId INTEGER PRIMARY KEY AUTOINCREMENT,
                 userId INTEGER,
+                bidId INTEGER,
                 startPrice DECIMAL(10, 2),
                 buyOutPrice DECIMAL(10, 2) DEFAULT NULL,
+                title TEXT,
                 description TEXT,
                 deadline DATETIME,
                 category TEXT,
                 ImageDataRef TEXT,
-                FOREIGN KEY (userId) REFERENCES User(userId)
+                FOREIGN KEY (userId) REFERENCES User(userId),
+                FOREIGN KEY (bidId) REFERENCES Bid(bidId)
             );
             """
         )
@@ -47,9 +50,7 @@ class DbHelper(val context: Context, factory: SQLiteDatabase.CursorFactory?) :
                 bidDate DATETIME,
                 bidValue DECIMAL(10, 2),
                 userId INTEGER,
-                lotId INTEGER,
-                FOREIGN KEY (userId) REFERENCES User(userId),
-                FOREIGN KEY (lotId) REFERENCES Lot(lotId)
+                FOREIGN KEY (userId) REFERENCES User(userId)
             );
             """
         )
@@ -78,6 +79,12 @@ class DbHelper(val context: Context, factory: SQLiteDatabase.CursorFactory?) :
             );
             """
         )
+    }
+
+    fun resetDatabase() {
+        val db = this.writableDatabase
+        onUpgrade(db, 1, 1)
+        db.close()
     }
 
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
@@ -117,6 +124,40 @@ class DbHelper(val context: Context, factory: SQLiteDatabase.CursorFactory?) :
 
         db.close()
     }
+
+    fun getAllLots(): ArrayList<Lot> {
+        val db = this.readableDatabase
+        var lot: Lot? = null
+        val list: ArrayList<Lot> = arrayListOf<Lot>()
+        val cursor = db.rawQuery("SELECT * FROM Lot", null)
+
+        while (cursor.moveToNext()) {
+            val ownerID = 13
+
+            val startPriceInd = cursor.getColumnIndex("startPrice")
+            val startPrice: Double = cursor.getDouble(startPriceInd)
+
+            val titleInd = cursor.getColumnIndex("title")
+            val title = "Стіл “Singer” 2005 року в ідеальному стані"
+
+            val descriptionInd = cursor.getColumnIndex("description")
+            val description = cursor.getString(descriptionInd)
+
+            val deadlineInd = cursor.getColumnIndex("deadline")
+            val deadline = cursor.getString(deadlineInd)
+
+            val categoryInd = cursor.getColumnIndex("category")
+            val category = cursor.getString(categoryInd)
+
+            val imageInd = cursor.getColumnIndex("ImageDataRef")
+            val imageRef = cursor.getString(imageInd)
+
+            lot = Lot(null, ownerID, null, startPrice, null, title, description, deadline, category, imageRef)
+            list.add(lot)
+        }
+        return list
+    }
+
 
     fun addBid(bid: Bid) {
         val values = ContentValues()

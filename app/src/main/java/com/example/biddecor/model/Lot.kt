@@ -5,7 +5,7 @@ import java.time.LocalDateTime
 class Lot(
     val lotId: Int?,
     val ownerId: Int,
-    val lastCustomerId: Int?,
+    val lastBid: Bid?,
     val startPrice: Double,
     val buyOutPrice: Double?,
     val title : String,
