@@ -12,7 +12,6 @@ import androidx.navigation.ui.setupWithNavController
 import com.example.biddecor.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
-
     private lateinit var binding: ActivityMainBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {

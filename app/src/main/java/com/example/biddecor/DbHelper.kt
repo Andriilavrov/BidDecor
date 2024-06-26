@@ -95,6 +95,7 @@ class DbHelper(val context: Context, factory: SQLiteDatabase.CursorFactory?) :
         values.put("userName", user.userName)
         values.put("email", user.email)
         values.put("password", user.password)
+        values.put("ImageProfileRef", user.ImageProfileRef)
 
         val db = this.writableDatabase
         db.insert("User", null, values)
@@ -161,4 +162,29 @@ class DbHelper(val context: Context, factory: SQLiteDatabase.CursorFactory?) :
         return result.moveToFirst()
     }
 
+    fun getUserByEmail(email: String): User? {
+        val db = this.readableDatabase
+        var user: User? = null
+
+        val cursor = db.rawQuery("SELECT * FROM User WHERE email = ?", arrayOf(email))
+
+        if (cursor.moveToFirst()) {
+            val userNameInd = cursor.getColumnIndex("userName")
+            val userEmailInd = cursor.getColumnIndex("email")
+            val userPasswordInd = cursor.getColumnIndex("password")
+            val imageProfileRefInd = cursor.getColumnIndex("ImageProfileRef")
+
+            val userName = cursor.getString(userNameInd)
+            val userEmail = cursor.getString(userEmailInd)
+            val userPassword = cursor.getString(userPasswordInd)
+            val imageProfileRef = cursor.getString(imageProfileRefInd)
+
+            user = User(null, userName, userEmail, userPassword, imageProfileRef)
+        }
+
+        cursor.close()
+        db.close()
+
+        return user
+    }
 }
