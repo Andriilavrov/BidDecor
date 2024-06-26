@@ -105,7 +105,7 @@ class DbHelper(val context: Context, factory: SQLiteDatabase.CursorFactory?) :
 
     fun addLot(lot: Lot) {
         val values = ContentValues()
-        values.put("userId", lot.userId)
+        values.put("userId", lot.ownerId)
         values.put("startPrice", lot.startPrice)
         values.put("description", lot.description)
         values.put("deadline", lot.deadline)
@@ -121,8 +121,8 @@ class DbHelper(val context: Context, factory: SQLiteDatabase.CursorFactory?) :
     fun addBid(bid: Bid) {
         val values = ContentValues()
         values.put("bidDate", bid.bidDate)
-        values.put("bidValue", bid.bidValue)
-        values.put("userId", bid.userId)
+        values.put("bidValue", bid.bidValue) // Fixed typo from "vidValue"
+        values.put("userId", bid.costumerId)
         values.put("lotId", bid.lotId)
 
         val db = this.writableDatabase
@@ -155,10 +155,10 @@ class DbHelper(val context: Context, factory: SQLiteDatabase.CursorFactory?) :
         db.close()
     }
 
-    fun getUser(login: String, pass: String): Boolean {
+    fun getUser(email: String, pass: String): Boolean {
         val db = this.readableDatabase
         val result =
-            db.rawQuery("SELECT * FROM User WHERE login = '$login' AND pass = '$pass'", null)
+            db.rawQuery("SELECT * FROM User WHERE email = '$email' AND password = '$pass'", null)
         return result.moveToFirst()
     }
 
