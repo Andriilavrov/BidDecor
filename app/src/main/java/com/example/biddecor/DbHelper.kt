@@ -4,6 +4,7 @@ import android.content.ContentValues
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
+import com.example.biddecor.model.User
 
 class DbHelper(val context: Context, val factory: SQLiteDatabase.CursorFactory?) :
     SQLiteOpenHelper(context, "biddecor", factory, 1) {
@@ -20,9 +21,9 @@ class DbHelper(val context: Context, val factory: SQLiteDatabase.CursorFactory?)
 
     fun addUser(user: User) {
         val values = ContentValues()
-        values.put("login", user.login)
-        values.put("email", user.email)
-        values.put("pass", user.pass)
+        values.put("login", user.userName)
+        values.put("email", user.userEmal)
+        values.put("pass", user.password)
 
         val db = this.writableDatabase
         db.insert("users", null, values)
