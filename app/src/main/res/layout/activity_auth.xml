@@ -45,7 +45,7 @@
         android:layout_width="150dp"
         android:layout_height="48dp"
         android:layout_gravity="center"
-        android:layout_marginTop="125dp"
+        android:layout_marginTop="115dp"
         android:backgroundTint="#5ACD57"
         android:fontFamily="@font/inter_semibold"
         android:text="Увійти"
