@@ -33,6 +33,7 @@ class RegActivity : AppCompatActivity() {
                 Toast.makeText(this, "Пароль не підтвердженно", Toast.LENGTH_SHORT).show()
             } else {
                 val user = User(name, email, pass)
+                val db = DbHelper(this, null)
             }
         }
 
