@@ -1,5 +1,6 @@
 package com.example.biddecor
 
+import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
@@ -15,13 +16,20 @@ class RegActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_reg)
 
+        val authButton = findViewById<Button>(R.id.enterButton)
+        authButton.setOnClickListener {
+            val intent = Intent(this, AuthActivity::class.java)
+            startActivity(intent)
+        }
+
         val userName: EditText = findViewById(R.id.userName)
         val userEmail: EditText = findViewById(R.id.userEmail)
         val userPass: EditText = findViewById(R.id.userPassword)
         val userPassConf: EditText = findViewById(R.id.userPasswordConfirm)
         val button: Button = findViewById(R.id.regButton)
 
-        button.setOnClickListener {
+        val regButton = findViewById<Button>(R.id.regButton)
+        regButton.setOnClickListener {
             val name = userName.text.toString().trim()
             val email = userEmail.text.toString().trim()
             val pass = userPass.text.toString().trim()
@@ -32,8 +40,16 @@ class RegActivity : AppCompatActivity() {
             } else if (pass != passConfirm) {
                 Toast.makeText(this, "Пароль не підтвердженно", Toast.LENGTH_SHORT).show()
             } else {
-                val user = User(name, email, pass)
+                val user = User(null, name, email, pass, null)
+
                 val db = DbHelper(this, null)
+                db.addUser(user)
+                Toast.makeText(this, "Користувач $name зареєстрований", Toast.LENGTH_SHORT).show()
+
+                userName.text.clear()
+                userEmail.text.clear()
+                userPass.text.clear()
+                userPassConf.text.clear()
             }
         }
 
