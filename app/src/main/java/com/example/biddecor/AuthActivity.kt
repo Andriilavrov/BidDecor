@@ -7,6 +7,8 @@ import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
 import android.widget.Toast
 import com.example.biddecor.model.User
+import org.json.JSONObject
+import java.io.File
 
 class AuthActivity : AppCompatActivity() {
     private lateinit var googleSignInHelper: GoogleSignInHelper
@@ -41,13 +43,21 @@ class AuthActivity : AppCompatActivity() {
                 val db = DbHelper(this, null)
                 db.addUser(user)
 
-                Toast.makeText(this, "Signed in as: ${account.displayName}", Toast.LENGTH_LONG).show()
+                val jsonObject = JSONObject()
+                jsonObject.put("email", email)
+                val jsonFilePath = File(filesDir, "user.json")
+                jsonFilePath.writeText(jsonObject.toString())
+
+
+
+
+                Toast.makeText(this, "Signed in as: ${account.displayName}", Toast.LENGTH_LONG)
+                    .show()
 
                 val intent = Intent(this, MainActivity::class.java)
                 startActivity(intent)
             },
             onFailure = { exception ->
-                // Handle sign-in failure
                 Toast.makeText(this, "Sign-in failed: ${exception.message}", Toast.LENGTH_SHORT).show()
             })
     }

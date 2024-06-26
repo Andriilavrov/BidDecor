@@ -162,4 +162,36 @@ class DbHelper(val context: Context, factory: SQLiteDatabase.CursorFactory?) :
         return result.moveToFirst()
     }
 
+    fun getUserByEmail(email: String): User? {
+        val db = this.readableDatabase
+        var user: User? = null
+
+        // Запрос к таблице User по email
+        val cursor = db.rawQuery("SELECT * FROM User WHERE email = ?", arrayOf(email))
+
+        // Если курсор не пустой, извлекаем данные
+        if (cursor.moveToFirst()) {
+            val userIdInd = cursor.getColumnIndex("userId")
+            val userNameInd = cursor.getColumnIndex("userName")
+            val userEmailInd = cursor.getColumnIndex("email")
+            val userPasswordInd = cursor.getColumnIndex("password")
+            val imageProfileRefInd = cursor.getColumnIndex("ImageProfileRef")
+
+//            val userId = cursor.getInt(userIdInd)
+            val userName = cursor.getString(userNameInd)
+            val userEmail = cursor.getString(userEmailInd)
+            val userPassword = cursor.getString(userPasswordInd)
+            val imageProfileRef = cursor.getString(imageProfileRefInd)
+
+            // Создание объекта User
+            user = User(null, userEmail, userPassword, imageProfileRef)
+//            user.userId = userId  // Установка ID пользователя
+        }
+
+        // Закрываем курсор и базу данных
+        cursor.close()
+        db.close()
+
+        return user
+    }
 }
