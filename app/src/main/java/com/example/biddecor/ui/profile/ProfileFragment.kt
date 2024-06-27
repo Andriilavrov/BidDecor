@@ -66,7 +66,7 @@ class ProfileFragment : Fragment() {
         }
 
         val userNameTextView = view.findViewById<TextView>(R.id.userName_text)
-        userNameTextView.text = user?.userName
+        userNameTextView.text = user?.userName + " id: " + user?.userId
     }
 
     override fun onDestroyView() {

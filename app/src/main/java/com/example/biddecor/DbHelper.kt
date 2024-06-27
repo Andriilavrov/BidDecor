@@ -9,6 +9,7 @@ import com.example.biddecor.model.Favorite
 import com.example.biddecor.model.Lot
 import com.example.biddecor.model.Message
 import com.example.biddecor.model.User
+import java.util.Random
 
 class DbHelper(val context: Context, factory: SQLiteDatabase.CursorFactory?) :
     SQLiteOpenHelper(context, "biddecor", factory, 1) {
@@ -17,7 +18,7 @@ class DbHelper(val context: Context, factory: SQLiteDatabase.CursorFactory?) :
         db.execSQL(
             """
             CREATE TABLE User (
-                userId INTEGER PRIMARY KEY AUTOINCREMENT,
+                userId INTEGER PRIMARY KEY,
                 userName TEXT,
                 email TEXT,
                 password TEXT,
@@ -28,7 +29,7 @@ class DbHelper(val context: Context, factory: SQLiteDatabase.CursorFactory?) :
         db.execSQL(
             """
             CREATE TABLE Lot (
-                lotId INTEGER PRIMARY KEY AUTOINCREMENT,
+                lotId INTEGER PRIMARY KEY,
                 ownerId INTEGER,
                 bidId INTEGER DEFAULT NULL,
                 startPrice INTEGER,
@@ -46,7 +47,7 @@ class DbHelper(val context: Context, factory: SQLiteDatabase.CursorFactory?) :
         db.execSQL(
             """
             CREATE TABLE Bid (
-                bidId INTEGER PRIMARY KEY AUTOINCREMENT,
+                bidId INTEGER PRIMARY KEY,
                 bidDate TEXT,
                 bidValue INTEGER,
                 userId INTEGER,
@@ -57,7 +58,7 @@ class DbHelper(val context: Context, factory: SQLiteDatabase.CursorFactory?) :
         db.execSQL(
             """
             CREATE TABLE Message (
-                messageId INTEGER PRIMARY KEY AUTOINCREMENT,
+                messageId INTEGER PRIMARY KEY,
                 customerId INTEGER,
                 ownerId INTEGER,
                 lotId INTEGER,
@@ -71,7 +72,7 @@ class DbHelper(val context: Context, factory: SQLiteDatabase.CursorFactory?) :
         db.execSQL(
             """
             CREATE TABLE Favorite (
-                favoriteId INTEGER PRIMARY KEY AUTOINCREMENT,
+                favoriteId INTEGER PRIMARY KEY,
                 userId INTEGER,
                 lotId INTEGER,
                 FOREIGN KEY (userId) REFERENCES User(userId),
@@ -99,8 +100,33 @@ class DbHelper(val context: Context, factory: SQLiteDatabase.CursorFactory?) :
         onCreate(db)
     }
 
+    fun generateRandomId(columnName: String, tableName: String): Int {
+        val random = Random()
+        var id = random.nextInt(65536)
+
+        while (isIdExists(id.toLong(), columnName, tableName)) {
+            id = random.nextInt(65536)
+        }
+
+        return id
+    }
+
+    fun isIdExists(id: Long, columnName: String, tableName: String): Boolean {
+        val db = readableDatabase
+        val query = "SELECT $columnName FROM $tableName WHERE $columnName = ?"
+        val cursor = db.rawQuery(query, arrayOf(id.toString()))
+        val exists = cursor.count > 0
+        cursor.close()
+        db.close()
+        return exists
+    }
+
+
     fun addUser(user: User) {
+        user.userId = generateRandomId("userId", "User")
+
         val values = ContentValues()
+        values.put("userId", user.userId)
         values.put("userName", user.userName)
         values.put("email", user.email)
         values.put("password", user.password)
@@ -108,12 +134,14 @@ class DbHelper(val context: Context, factory: SQLiteDatabase.CursorFactory?) :
 
         val db = this.writableDatabase
         db.insert("User", null, values)
-
         db.close()
     }
 
     fun addLot(lot: Lot) {
+        val lotId = generateRandomId("lotId", "Lot")
+
         val values = ContentValues()
+        values.put("lotId", lotId)
         values.put("ownerId", lot.ownerId)
         values.put("startPrice", lot.startPrice)
         values.put("title", lot.title)
@@ -189,7 +217,10 @@ class DbHelper(val context: Context, factory: SQLiteDatabase.CursorFactory?) :
     }
 
     fun addMessage(message: Message) {
+        val messageId = generateRandomId("messageId", "Message")
+
         val values = ContentValues()
+        values.put("messageId", messageId)
         values.put("customerId", message.customerId)
         values.put("ownerId", message.ownerId)
         values.put("lotId", message.lotId)
@@ -202,7 +233,10 @@ class DbHelper(val context: Context, factory: SQLiteDatabase.CursorFactory?) :
     }
 
     fun addFavorite(favorite: Favorite) {
+        val favoriteId = generateRandomId("favoriteId", "Favorite")
+
         val values = ContentValues()
+        values.put("favoriteId", favoriteId)
         values.put("userId", favorite.userId)
         values.put("lotId", favorite.lotId)
 
@@ -245,7 +279,10 @@ class DbHelper(val context: Context, factory: SQLiteDatabase.CursorFactory?) :
         return user
     }
 
-    fun insertFavorite(userId: Long, lotId: Long): Long {
+    fun insertFavorite(userId: Int?, lotId: Int): Int {
+        if (userId == null){
+            return -1
+        }
         val db = writableDatabase
         val contentValues = ContentValues().apply {
             put("userId", userId)
@@ -253,7 +290,7 @@ class DbHelper(val context: Context, factory: SQLiteDatabase.CursorFactory?) :
         }
         val insertedId = db.insert("Favorite", null, contentValues)
         db.close()
-        return insertedId
+        return insertedId.toInt()
     }
 
     fun testFillDB() {

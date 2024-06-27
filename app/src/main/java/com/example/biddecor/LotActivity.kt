@@ -15,6 +15,9 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.example.biddecor.model.Bid
+import com.example.biddecor.model.User
+import org.json.JSONObject
+import java.io.File
 
 class LotActivity : AppCompatActivity() {
     @SuppressLint("SetTextI18n")
@@ -52,11 +55,8 @@ class LotActivity : AppCompatActivity() {
             val bidCost: String = editTextNumber.text.toString().trim()
             val bidCostInt: Int = bidCost.toInt()
 
-
             price.text = bidCost + " ₴"
             editTextNumber.text.clear()
-
-            //TODO
         }
 
         exitBtn.setOnClickListener {
@@ -67,13 +67,16 @@ class LotActivity : AppCompatActivity() {
         val checkBox = findViewById<CheckBox>(R.id.checkBox)
         checkBox.setOnCheckedChangeListener { buttonView, isChecked ->
             if (isChecked) {
-                val dbHelper = DbHelper(this, null)
-                val insertedId = dbHelper.insertFavorite(userId, lotId)
-                if (insertedId != -1L) {
-                    // Успешно добавлено
+                val db = DbHelper(this, null)
+                val jsonFilePath = File(filesDir, "user.json")
+                val jsonString = jsonFilePath.readText()
+                val jsonObject = JSONObject(jsonString)
+                val email = jsonObject.getString("email")
+                val user: User? = db.getUserByEmail(email)
+                val insertedId = db.insertFavorite(user?.userId, lotId)
+                if (insertedId != -1) {
                     Toast.makeText(this, "Лот було збережено", Toast.LENGTH_SHORT).show()
                 } else {
-                    // Ошибка добавления
                     Toast.makeText(this, "Помилка при збережені лоту", Toast.LENGTH_SHORT).show()
                 }
             } else {
