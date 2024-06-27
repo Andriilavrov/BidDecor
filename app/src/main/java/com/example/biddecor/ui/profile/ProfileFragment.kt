@@ -1,6 +1,5 @@
-package com.example.biddecor.ui.notifications
+package com.example.biddecor.ui.profile
 
-import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -11,18 +10,16 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.biddecor.DbHelper
 import com.example.biddecor.R
-import com.example.biddecor.databinding.FragmentNotificationsBinding
+import com.example.biddecor.databinding.FragmentProfileBinding
 import com.example.biddecor.model.User
 import com.squareup.picasso.Picasso
 import org.json.JSONObject
 import java.io.File
 
-class NotificationsFragment : Fragment() {
+class ProfileFragment : Fragment() {
 
-    private var _binding: FragmentNotificationsBinding? = null
+    private var _binding: FragmentProfileBinding? = null
 
-    // This property is only valid between onCreateView and
-    // onDestroyView.
     private val binding get() = _binding!!
 
     override fun onCreateView(
@@ -30,10 +27,10 @@ class NotificationsFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val notificationsViewModel =
-            ViewModelProvider(this).get(NotificationsViewModel::class.java)
+        val profileViewModel =
+            ViewModelProvider(this).get(ProfileViewModel::class.java)
 
-        _binding = FragmentNotificationsBinding.inflate(inflater, container, false)
+        _binding = FragmentProfileBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
         val jsonFilePath = File(context?.filesDir, "user.json")
@@ -45,7 +42,7 @@ class NotificationsFragment : Fragment() {
         val user: User? = db.getUserByEmail(email)
 
         val textViewEmail: TextView = binding.userEmailText
-        notificationsViewModel.text.observe(viewLifecycleOwner) {
+        profileViewModel.text.observe(viewLifecycleOwner) {
             textViewEmail.text = user?.email
         }
 

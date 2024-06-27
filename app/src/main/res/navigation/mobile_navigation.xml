@@ -3,23 +3,23 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mobile_navigation"
-    app:startDestination="@+id/navigation_home">
+    app:startDestination="@+id/navigation_auctions">
 
     <fragment
-        android:id="@+id/navigation_home"
-        android:name="com.example.biddecor.ui.home.HomeFragment"
+        android:id="@+id/navigation_auctions"
+        android:name="com.example.biddecor.ui.auctions.AuctionsFragment"
         android:label="@string/title_home"
         tools:layout="@layout/fragment_auctions" />
 
     <fragment
-        android:id="@+id/navigation_dashboard"
-        android:name="com.example.biddecor.ui.dashboard.DashboardFragment"
+        android:id="@+id/navigation_favorites"
+        android:name="com.example.biddecor.ui.favorites.FavoritesFragment"
         android:label="@string/title_dashboard"
-        tools:layout="@layout/fragment_dashboard" />
+        tools:layout="@layout/fragment_favorites" />
 
     <fragment
-        android:id="@+id/navigation_notifications"
-        android:name="com.example.biddecor.ui.notifications.NotificationsFragment"
+        android:id="@+id/navigation_profile"
+        android:name="com.example.biddecor.ui.profile.ProfileFragment"
         android:label="@string/title_notifications"
-        tools:layout="@layout/fragment_notifications" />
+        tools:layout="@layout/fragment_profile" />
 </navigation>

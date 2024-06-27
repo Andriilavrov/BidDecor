@@ -25,13 +25,10 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         val navView: BottomNavigationView = binding.navView
-
         val navController = findNavController(R.id.nav_host_fragment_activity_main)
-        // Passing each menu ID as a set of Ids because each
-        // menu should be considered as top level destinations.
         val appBarConfiguration = AppBarConfiguration(
             setOf(
-                R.id.navigation_home, R.id.navigation_dashboard, R.id.navigation_notifications
+                R.id.navigation_auctions, R.id.navigation_favorites, R.id.navigation_profile
             )
         )
         val filterButton = findViewById<Button>(R.id.filter_btn)
@@ -40,11 +37,11 @@ class MainActivity : AppCompatActivity() {
 
         }
 
-        val lotsList: RecyclerView = findViewById(R.id.lotsList)
-        val lots: ArrayList<Lot> = addLots()
-
-        lotsList.layoutManager = LinearLayoutManager(this)
-        lotsList.adapter = LotsAdapter(lots, this)
+//        val lotsList: RecyclerView = findViewById(R.id.lotsList)
+//        val lots: ArrayList<Lot> = addLots()
+//
+//        lotsList.layoutManager = LinearLayoutManager(this)
+//        lotsList.adapter = LotsAdapter(lots, this)
 
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)

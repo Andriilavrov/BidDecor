@@ -18,7 +18,6 @@ class AuthActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_auth)
 
-
         val userEmail: EditText = findViewById(R.id.userEmail)
         val userPass: EditText = findViewById(R.id.userPassword)
         val authButton = findViewById<Button>(R.id.enterButton)
@@ -76,9 +75,6 @@ class AuthActivity : AppCompatActivity() {
                 val jsonFilePath = File(filesDir, "user.json")
                 jsonFilePath.writeText(jsonObject.toString())
 
-
-
-
                 Toast.makeText(this, "Signed in as: ${account.displayName}", Toast.LENGTH_LONG)
                     .show()
 
@@ -89,5 +85,4 @@ class AuthActivity : AppCompatActivity() {
                 Toast.makeText(this, "Sign-in failed: ${exception.message}", Toast.LENGTH_SHORT).show()
             })
     }
-
 }

@@ -18,6 +18,11 @@ class RegActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_reg)
 
+        googleSignInHelper = GoogleSignInHelper(this)
+        findViewById<Button>(R.id.googleButton).setOnClickListener {
+            googleSignInHelper.signIn(this)
+        }
+
         val authButton = findViewById<Button>(R.id.enterButton)
         authButton.setOnClickListener {
             val intent = Intent(this, AuthActivity::class.java)
@@ -53,10 +58,7 @@ class RegActivity : AppCompatActivity() {
                 userPassConf.text.clear()
             }
 
-            googleSignInHelper = GoogleSignInHelper(this)
-            findViewById<Button>(R.id.googleButton).setOnClickListener {
-                googleSignInHelper.signIn(this)
-            }
+
         }
     }
 
@@ -73,6 +75,11 @@ class RegActivity : AppCompatActivity() {
                 val user = User(null, name, email, "", photoUrlString)
                 val db = DbHelper(this, null)
                 db.addUser(user)
+
+                val jsonObject = JSONObject()
+                jsonObject.put("email", email)
+                val jsonFilePath = File(filesDir, "user.json")
+                jsonFilePath.writeText(jsonObject.toString())
 
                 Toast.makeText(this, "Signed in as: ${account.displayName}", Toast.LENGTH_LONG).show()
 

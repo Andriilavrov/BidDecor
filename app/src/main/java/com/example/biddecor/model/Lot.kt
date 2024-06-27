@@ -1,12 +1,10 @@
 package com.example.biddecor.model
 
-import java.time.LocalDateTime
-
 class Lot(
     val lotId: Int?,
     val ownerId: Int,
     val lastBid: Bid?,
-    val startPrice: Double,
+    val startPrice: Int,
     val buyOutPrice: Double?,
     val title : String,
     val description: String,

@@ -1,12 +1,10 @@
-package com.example.biddecor.ui.notifications
+package com.example.biddecor.ui.profile
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.biddecor.DbHelper
-import com.example.biddecor.MainActivity
 
-class NotificationsViewModel : ViewModel() {
+class ProfileViewModel : ViewModel() {
 
 //    public fun loadUser (email: String){
 //        MainActivity.userEmail

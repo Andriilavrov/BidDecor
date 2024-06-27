@@ -29,16 +29,16 @@ class DbHelper(val context: Context, factory: SQLiteDatabase.CursorFactory?) :
             """
             CREATE TABLE Lot (
                 lotId INTEGER PRIMARY KEY AUTOINCREMENT,
-                userId INTEGER,
+                ownerId INTEGER,
                 bidId INTEGER,
-                startPrice DECIMAL(10, 2),
-                buyOutPrice DECIMAL(10, 2) DEFAULT NULL,
+                startPrice INTEGER,
+                buyOutPrice INTEGER DEFAULT NULL,
                 title TEXT,
                 description TEXT,
-                deadline DATETIME,
+                deadline TEXT,
                 category TEXT,
                 ImageDataRef TEXT,
-                FOREIGN KEY (userId) REFERENCES User(userId),
+                FOREIGN KEY (ownerId) REFERENCES User(userId),
                 FOREIGN KEY (bidId) REFERENCES Bid(bidId)
             );
             """
@@ -47,8 +47,8 @@ class DbHelper(val context: Context, factory: SQLiteDatabase.CursorFactory?) :
             """
             CREATE TABLE Bid (
                 bidId INTEGER PRIMARY KEY AUTOINCREMENT,
-                bidDate DATETIME,
-                bidValue DECIMAL(10, 2),
+                bidDate TEXT,
+                bidValue INTEGER,
                 userId INTEGER,
                 FOREIGN KEY (userId) REFERENCES User(userId)
             );
@@ -79,6 +79,8 @@ class DbHelper(val context: Context, factory: SQLiteDatabase.CursorFactory?) :
             );
             """
         )
+
+        testFillDB()
     }
 
     fun resetDatabase() {
@@ -112,8 +114,9 @@ class DbHelper(val context: Context, factory: SQLiteDatabase.CursorFactory?) :
 
     fun addLot(lot: Lot) {
         val values = ContentValues()
-        values.put("userId", lot.ownerId)
+        values.put("ownerId", lot.ownerId)
         values.put("startPrice", lot.startPrice)
+        values.put("title", lot.title)
         values.put("description", lot.description)
         values.put("deadline", lot.deadline)
         values.put("category", lot.category)
@@ -128,17 +131,18 @@ class DbHelper(val context: Context, factory: SQLiteDatabase.CursorFactory?) :
     fun getAllLots(): ArrayList<Lot> {
         val db = this.readableDatabase
         var lot: Lot? = null
-        val list: ArrayList<Lot> = arrayListOf<Lot>()
+        val list: ArrayList<Lot> = arrayListOf()
         val cursor = db.rawQuery("SELECT * FROM Lot", null)
 
         while (cursor.moveToNext()) {
-            val ownerID = 13
+            val ownerIdInd = cursor.getColumnIndex("ownerId")
+            val ownerId: Int = cursor.getInt(ownerIdInd)
 
             val startPriceInd = cursor.getColumnIndex("startPrice")
-            val startPrice: Double = cursor.getDouble(startPriceInd)
+            val startPrice: Int = cursor.getInt(startPriceInd)
 
             val titleInd = cursor.getColumnIndex("title")
-            val title = "Стіл “Singer” 2005 року в ідеальному стані"
+            val title = cursor.getString(titleInd)
 
             val descriptionInd = cursor.getColumnIndex("description")
             val description = cursor.getString(descriptionInd)
@@ -152,17 +156,18 @@ class DbHelper(val context: Context, factory: SQLiteDatabase.CursorFactory?) :
             val imageInd = cursor.getColumnIndex("ImageDataRef")
             val imageRef = cursor.getString(imageInd)
 
-            lot = Lot(null, ownerID, null, startPrice, null, title, description, deadline, category, imageRef)
+            lot = Lot(null, ownerId, null, startPrice, null, title, description, deadline, category, imageRef)
             list.add(lot)
         }
+        cursor.close()
+        db.close()
         return list
     }
-
 
     fun addBid(bid: Bid) {
         val values = ContentValues()
         values.put("bidDate", bid.bidDate)
-        values.put("bidValue", bid.bidValue) // Fixed typo from "vidValue"
+        values.put("bidValue", bid.bidValue)
         values.put("userId", bid.costumerId)
         values.put("lotId", bid.lotId)
 
@@ -227,5 +232,13 @@ class DbHelper(val context: Context, factory: SQLiteDatabase.CursorFactory?) :
         db.close()
 
         return user
+    }
+
+    fun testFillDB() {
+        addUser(User(null, "John", "john@example.com", "12345678", null))
+        addUser(User(null, "Emily", "emily@example.com", "12345678", null))
+        addUser(User(null, "User", "user@example.com", "12345678", null))
+        addLot(Lot(null, 1, null, 1920, null, "Стол 'SINGER'", "Стан: нове\nНаявність: в наявності\nПризначення: обідній\n" +
+                "Тип: класичний\n\nНовий. Не великі косметичні дефекти , вдавленості при транспортуванні.", "12.06.2024", "Столи", "table.jpg"))
     }
 }

@@ -11,6 +11,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.biddecor.LotActivity
 import com.example.biddecor.R
+import com.squareup.picasso.Picasso
 
 class LotsAdapter(val lots: List<Lot>, var context: Context) :
     RecyclerView.Adapter<LotsAdapter.MyViewHolder>() {
@@ -37,6 +38,7 @@ class LotsAdapter(val lots: List<Lot>, var context: Context) :
         holder.title.text = lots[position].title
         holder.price.text = lots[position].startPrice.toString()
         holder.deadline.text = lots[position].deadline
+        Picasso.get().load(lots[position].ImageDataRef).into(holder.image)
         holder.button.setOnClickListener {
             val intent = Intent(context, LotActivity::class.java)
             intent.putExtra("lotTitle", lots[position].title)
