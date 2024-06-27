@@ -38,15 +38,23 @@
             android:textStyle="bold" />
 
 
-
-        <RadioButton
-            android:id="@+id/radioButton"
+        <CheckBox
+            android:id="@+id/checkBox"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
             android:layout_marginRight="10dp"
             android:button="@drawable/radio_button_selector"
-            android:fontFamily="@font/inter_semibold" />
+            android:buttonTint="#FF2626" />
+
+<!--        <RadioButton-->
+<!--            android:id="@+id/radioButton"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_marginTop="5dp"-->
+<!--            android:layout_marginRight="10dp"-->
+<!--            android:button="@drawable/radio_button_selector"-->
+<!--            android:fontFamily="@font/inter_semibold" />-->
 
 
     </LinearLayout>
