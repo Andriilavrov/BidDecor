@@ -37,12 +37,14 @@ class MainActivity : AppCompatActivity() {
         val filterButton = findViewById<Button>(R.id.filter_btn)
         filterButton.setOnClickListener {
             //Toast.makeText(this, "ТЕСТ ФІЛЬТРА", Toast.LENGTH_SHORT).show()
-            val lotsList: RecyclerView = findViewById(R.id.lotsList)
-            val lots: ArrayList<Lot> = addLots()
 
-            lotsList.layoutManager = LinearLayoutManager(this)
-            lotsList.adapter = LotsAdapter(lots, this)
         }
+
+        val lotsList: RecyclerView = findViewById(R.id.lotsList)
+        val lots: ArrayList<Lot> = addLots()
+
+        lotsList.layoutManager = LinearLayoutManager(this)
+        lotsList.adapter = LotsAdapter(lots, this)
 
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)

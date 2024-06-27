@@ -1,24 +1,26 @@
 package com.example.biddecor.model
 
 import android.content.Context
-import android.media.Image
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.example.biddecor.LotActivity
 import com.example.biddecor.R
 
 class LotsAdapter(val lots: List<Lot>, var context: Context) :
     RecyclerView.Adapter<LotsAdapter.MyViewHolder>() {
 
     class MyViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        val image: ImageView = view.findViewById(R.id.lotImage)
-        val title: TextView = view.findViewById(R.id.lotTitle)
-        val price: TextView = view.findViewById(R.id.lotPrice)
-        val deadline: TextView = view.findViewById(R.id.lotDeadline)
-
+        val image: ImageView = view.findViewById(R.id.lotListImage)
+        val title: TextView = view.findViewById(R.id.lotListTitle)
+        val price: TextView = view.findViewById(R.id.lotListPrice)
+        val deadline: TextView = view.findViewById(R.id.lotListDeadline)
+        val button: Button = view.findViewById(R.id.lotListButton)
 
     }
 
@@ -35,6 +37,14 @@ class LotsAdapter(val lots: List<Lot>, var context: Context) :
         holder.title.text = lots[position].title
         holder.price.text = lots[position].startPrice.toString()
         holder.deadline.text = lots[position].deadline
-
+        holder.button.setOnClickListener {
+            val intent = Intent(context, LotActivity::class.java)
+            intent.putExtra("lotTitle", lots[position].title)
+            intent.putExtra("lotStartPrice", lots[position].startPrice)
+            intent.putExtra("lotCategory", lots[position].category)
+            intent.putExtra("lotDeadline", lots[position].deadline)
+            intent.putExtra("lotDesc", lots[position].description)
+            context.startActivity(intent)
+        }
     }
 }
