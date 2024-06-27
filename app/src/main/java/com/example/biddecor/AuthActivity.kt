@@ -35,6 +35,10 @@ class AuthActivity : AppCompatActivity() {
                 val isAuth = db.getUser(email, pass)
 
                 if (isAuth) {
+                    val jsonObject = JSONObject()
+                    jsonObject.put("email", email)
+                    val jsonFilePath = File(filesDir, "user.json")
+                    jsonFilePath.writeText(jsonObject.toString())
                     Toast.makeText(this, "Користувач авторизован", Toast.LENGTH_SHORT).show()
                     userEmail.text.clear()
                     userPass.text.clear()

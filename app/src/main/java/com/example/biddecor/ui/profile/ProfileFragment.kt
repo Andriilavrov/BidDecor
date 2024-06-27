@@ -46,11 +46,6 @@ class ProfileFragment : Fragment() {
             textViewEmail.text = user?.email
         }
 
-//        val textViewName: TextView = binding.userNameText
-//        notificationsViewModel.text.observe(viewLifecycleOwner) {
-//            textViewName.text = user?.userName
-//        }
-
         return root
     }
 
@@ -66,7 +61,9 @@ class ProfileFragment : Fragment() {
         val user: User? = db.getUserByEmail(email)
 
         val imageView = view.findViewById<ImageView>(R.id.imageView)
-        Picasso.get().load(user?.ImageProfileRef).into(imageView)
+        if (user?.ImageProfileRef != null && user?.ImageProfileRef != "") {
+            Picasso.get().load(user?.ImageProfileRef).into(imageView)
+        }
 
         val userNameTextView = view.findViewById<TextView>(R.id.userName_text)
         userNameTextView.text = user?.userName
