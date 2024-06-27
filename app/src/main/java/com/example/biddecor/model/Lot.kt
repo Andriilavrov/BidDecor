@@ -5,7 +5,7 @@ class Lot(
     val ownerId: Int,
     val lastBid: Int?,
     val startPrice: Int,
-    val buyOutPrice: Double?,
+    val buyOutPrice: Int?,
     val title : String,
     val description: String,
     val deadline: String,

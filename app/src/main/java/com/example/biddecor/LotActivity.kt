@@ -14,7 +14,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import org.w3c.dom.Text
+import com.example.biddecor.model.Bid
 
 class LotActivity : AppCompatActivity() {
     @SuppressLint("SetTextI18n")
@@ -31,7 +31,7 @@ class LotActivity : AppCompatActivity() {
         val title: TextView = findViewById(R.id.lotTitle)
         val price: TextView = findViewById(R.id.lotCurrentPrice)
         val deadline: TextView = findViewById(R.id.lotDeadline)
-        val bidButton: Button= findViewById(R.id.bidButton)
+        val bidButton: Button = findViewById(R.id.bidButton)
         val description: TextView = findViewById(R.id.lotDescriprion)
         val exitBtn: Button = findViewById(R.id.lotExitButton)
         val image: ImageView = findViewById(R.id.imageView2)
@@ -41,14 +41,22 @@ class LotActivity : AppCompatActivity() {
         price.text = intent.getStringExtra("lotStartPrice") + " ₴"
         deadline.text = "Кінець: " + intent.getStringExtra("lotDeadline")
         description.text = intent.getStringExtra("lotDesc")
-        val resId = resources.getIdentifier(intent.getStringExtra("imageRef"), "drawable", packageName)
+        val lotId: Int = intent.getIntExtra("lotId", -1)
+
+        val resId =
+            resources.getIdentifier(intent.getStringExtra("imageRef"), "drawable", packageName)
         image.setImageResource(resId)
 
         bidButton.setOnClickListener {
             val editTextNumber: EditText = findViewById(R.id.editTextNumber)
-            val cost: String = editTextNumber.text.toString().trim() + " ₴"
-            price.text = cost
+            val bidCost: String = editTextNumber.text.toString().trim()
+            val bidCostInt: Int = bidCost.toInt()
+
+
+            price.text = bidCost + " ₴"
             editTextNumber.text.clear()
+
+            //TODO
         }
 
         exitBtn.setOnClickListener {
