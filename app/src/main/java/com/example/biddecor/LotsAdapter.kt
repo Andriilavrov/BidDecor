@@ -9,6 +9,7 @@ import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.example.biddecor.model.Bid
 import com.example.biddecor.model.Lot
 import com.squareup.picasso.Picasso
 
@@ -36,6 +37,9 @@ class LotsAdapter(val lots: List<Lot>, var context: Context) :
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
 
         holder.title.text = lots[position].title
+        val db = DbHelper(context, null)
+        val lastBid: Bid? = db.getBidById(1)
+
         holder.price.text = lots[position].startPrice.toString()
         holder.deadline.text = lots[position].deadline
         val resId = context.resources.getIdentifier(lots[position].ImageDataRef, "drawable", context.packageName)

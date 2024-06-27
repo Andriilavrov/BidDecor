@@ -20,7 +20,6 @@ class AuthActivity : AppCompatActivity() {
 
         val db = DbHelper(this, null)
         db.resetDatabase()
-        db.testFillDB()
 
         val userEmail: EditText = findViewById(R.id.userEmail)
         val userPass: EditText = findViewById(R.id.userPassword)
