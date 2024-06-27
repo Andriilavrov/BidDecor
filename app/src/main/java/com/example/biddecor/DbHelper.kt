@@ -156,7 +156,18 @@ class DbHelper(val context: Context, factory: SQLiteDatabase.CursorFactory?) :
             val imageInd = cursor.getColumnIndex("ImageDataRef")
             val imageRef = cursor.getString(imageInd)
 
-            lot = Lot(null, ownerId, null, startPrice, null, title, description, deadline, category, imageRef)
+            lot = Lot(
+                null,
+                ownerId,
+                null,
+                startPrice,
+                null,
+                title,
+                description,
+                deadline,
+                category,
+                imageRef
+            )
             list.add(lot)
         }
         cursor.close()

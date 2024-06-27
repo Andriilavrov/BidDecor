@@ -74,18 +74,6 @@
 
 
             <Button
-                android:id="@+id/googleButton"
-                android:layout_width="300dp"
-                android:layout_height="75dp"
-                android:layout_gravity="center"
-                android:layout_marginTop="45dp"
-                android:backgroundTint="@color/white"
-                android:fontFamily="@font/inter_semibold"
-                android:text="Авторизуватися\nчерез Google"
-                android:textColor="@color/black"
-                app:cornerRadius="20dp" />
-
-            <Button
                 android:id="@+id/regButton"
                 android:layout_width="285dp"
                 android:layout_height="55dp"
@@ -100,6 +88,17 @@
                 app:cornerRadius="20dp" />
 
 
+            <Button
+                android:id="@+id/googleButton"
+                android:layout_width="300dp"
+                android:layout_height="75dp"
+                android:layout_gravity="center"
+                android:layout_marginTop="45dp"
+                android:backgroundTint="@color/white"
+                android:fontFamily="@font/inter_semibold"
+                android:text="Авторизуватися\nчерез Google"
+                android:textColor="@color/black"
+                app:cornerRadius="20dp" />
 
             <Button
                 android:id="@+id/enterButton"

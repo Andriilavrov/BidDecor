@@ -1,4 +1,4 @@
-package com.example.biddecor.model
+package com.example.biddecor
 
 import android.content.Context
 import android.content.Intent
@@ -9,8 +9,7 @@ import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.example.biddecor.LotActivity
-import com.example.biddecor.R
+import com.example.biddecor.model.Lot
 import com.squareup.picasso.Picasso
 
 class LotsAdapter(val lots: List<Lot>, var context: Context) :
@@ -35,6 +34,7 @@ class LotsAdapter(val lots: List<Lot>, var context: Context) :
     }
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
+
         holder.title.text = lots[position].title
         holder.price.text = lots[position].startPrice.toString()
         holder.deadline.text = lots[position].deadline
@@ -43,7 +43,7 @@ class LotsAdapter(val lots: List<Lot>, var context: Context) :
         holder.button.setOnClickListener {
             val intent = Intent(context, LotActivity::class.java)
             intent.putExtra("lotTitle", lots[position].title)
-            intent.putExtra("lotStartPrice", lots[position].startPrice)
+            intent.putExtra("lotStartPrice", lots[position].startPrice.toString())
             intent.putExtra("lotCategory", lots[position].category)
             intent.putExtra("lotDeadline", lots[position].deadline)
             intent.putExtra("lotDesc", lots[position].description)

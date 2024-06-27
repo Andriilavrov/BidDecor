@@ -1,5 +1,6 @@
 package com.example.biddecor
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
@@ -13,6 +14,7 @@ import androidx.core.view.WindowInsetsCompat
 import org.w3c.dom.Text
 
 class LotActivity : AppCompatActivity() {
+    @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_lot)
@@ -33,7 +35,7 @@ class LotActivity : AppCompatActivity() {
 
         category.text = intent.getStringExtra("lotCategory")
         title.text = intent.getStringExtra("lotTitle")
-        price.text = intent.getStringExtra("lotStartPrice")
+        price.text = intent.getStringExtra("lotStartPrice") + " ₴"
         deadline.text = "Кінець: " + intent.getStringExtra("lotDeadline")
         description.text = intent.getStringExtra("lotDesc")
         val resId = resources.getIdentifier(intent.getStringExtra("imageRef"), "drawable", packageName)

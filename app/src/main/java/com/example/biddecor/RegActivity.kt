@@ -56,6 +56,9 @@ class RegActivity : AppCompatActivity() {
                 userEmail.text.clear()
                 userPass.text.clear()
                 userPassConf.text.clear()
+
+                val intent = Intent(this, AuthActivity::class.java)
+                startActivity(intent)
             }
 
 
