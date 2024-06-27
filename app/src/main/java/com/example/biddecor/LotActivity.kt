@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -28,13 +29,15 @@ class LotActivity : AppCompatActivity() {
         val bidButton: Button= findViewById(R.id.bidButton)
         val description: TextView = findViewById(R.id.lotDescriprion)
         val exitBtn: Button = findViewById(R.id.lotExitButton)
+        val image: ImageView = findViewById(R.id.imageView2)
 
         category.text = intent.getStringExtra("lotCategory")
         title.text = intent.getStringExtra("lotTitle")
         price.text = intent.getStringExtra("lotStartPrice")
         deadline.text = "Кінець: " + intent.getStringExtra("lotDeadline")
         description.text = intent.getStringExtra("lotDesc")
-
+        val resId = resources.getIdentifier(intent.getStringExtra("imageRef"), "drawable", packageName)
+        image.setImageResource(resId)
 
         bidButton.setOnClickListener {
             val editTextNumber: EditText = findViewById(R.id.editTextNumber)

@@ -38,7 +38,8 @@ class LotsAdapter(val lots: List<Lot>, var context: Context) :
         holder.title.text = lots[position].title
         holder.price.text = lots[position].startPrice.toString()
         holder.deadline.text = lots[position].deadline
-        Picasso.get().load(lots[position].ImageDataRef).into(holder.image)
+        val resId = context.resources.getIdentifier(lots[position].ImageDataRef, "drawable", context.packageName)
+        holder.image.setImageResource(resId)
         holder.button.setOnClickListener {
             val intent = Intent(context, LotActivity::class.java)
             intent.putExtra("lotTitle", lots[position].title)
@@ -46,6 +47,7 @@ class LotsAdapter(val lots: List<Lot>, var context: Context) :
             intent.putExtra("lotCategory", lots[position].category)
             intent.putExtra("lotDeadline", lots[position].deadline)
             intent.putExtra("lotDesc", lots[position].description)
+            intent.putExtra("imageRef", lots[position].ImageDataRef)
             context.startActivity(intent)
         }
     }
