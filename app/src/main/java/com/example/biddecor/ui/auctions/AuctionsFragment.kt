@@ -12,7 +12,7 @@ import com.example.biddecor.DbHelper
 import com.example.biddecor.R
 import com.example.biddecor.databinding.FragmentAuctionsBinding
 import com.example.biddecor.model.Lot
-import com.example.biddecor.model.LotsAdapter
+import com.example.biddecor.LotsAdapter
 
 class AuctionsFragment : Fragment() {
 
@@ -32,6 +32,8 @@ class AuctionsFragment : Fragment() {
 
         _binding = FragmentAuctionsBinding.inflate(inflater, container, false)
         val root: View = binding.root
+
+
 
         return root
     }

@@ -156,7 +156,18 @@ class DbHelper(val context: Context, factory: SQLiteDatabase.CursorFactory?) :
             val imageInd = cursor.getColumnIndex("ImageDataRef")
             val imageRef = cursor.getString(imageInd)
 
-            lot = Lot(null, ownerId, null, startPrice, null, title, description, deadline, category, imageRef)
+            lot = Lot(
+                null,
+                ownerId,
+                null,
+                startPrice,
+                null,
+                title,
+                description,
+                deadline,
+                category,
+                imageRef
+            )
             list.add(lot)
         }
         cursor.close()
@@ -238,7 +249,22 @@ class DbHelper(val context: Context, factory: SQLiteDatabase.CursorFactory?) :
         addUser(User(null, "John", "john@example.com", "12345678", null))
         addUser(User(null, "Emily", "emily@example.com", "12345678", null))
         addUser(User(null, "User", "user@example.com", "12345678", null))
-        addLot(Lot(null, 1, null, 1920, null, "Стол 'SINGER'", "Стан: нове\nНаявність: в наявності\nПризначення: обідній\n" +
-                "Тип: класичний\n\nНовий. Не великі косметичні дефекти , вдавленості при транспортуванні.", "12.06.2024", "Столи", "table.jpg"))
+        addLot(
+            Lot(
+                null,
+                1,
+                null,
+                1920,
+                null,
+                "Стол 'SINGER'",
+                "Стан: нове\nНаявність: в наявності\nПризначення: обідній\n" +
+                        "Тип: класичний\n\nНовий. Не великі косметичні дефекти , вдавленості при транспортуванні.",
+                "12.06.2024",
+                "Столи",
+                "table"
+            )
+        )
+
+
     }
 }
