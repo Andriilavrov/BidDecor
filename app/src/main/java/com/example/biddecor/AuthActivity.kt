@@ -18,9 +18,9 @@ class AuthActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_auth)
 
-        //val db = DbHelper(this, null)
-        //db.resetDatabase()
-        //db.testFillDB()
+        val db = DbHelper(this, null)
+        db.resetDatabase()
+        db.testFillDB()
 
         val userEmail: EditText = findViewById(R.id.userEmail)
         val userPass: EditText = findViewById(R.id.userPassword)

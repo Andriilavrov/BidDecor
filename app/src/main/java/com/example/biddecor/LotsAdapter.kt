@@ -48,6 +48,7 @@ class LotsAdapter(val lots: List<Lot>, var context: Context) :
             intent.putExtra("lotDeadline", lots[position].deadline)
             intent.putExtra("lotDesc", lots[position].description)
             intent.putExtra("imageRef", lots[position].ImageDataRef)
+            intent.putExtra("lotId", lots[position].lotId)
             context.startActivity(intent)
         }
     }
