@@ -30,7 +30,7 @@ class DbHelper(val context: Context, factory: SQLiteDatabase.CursorFactory?) :
             CREATE TABLE Lot (
                 lotId INTEGER PRIMARY KEY AUTOINCREMENT,
                 ownerId INTEGER,
-                bidId INTEGER,
+                bidId INTEGER DEFAULT NULL,
                 startPrice INTEGER,
                 buyOutPrice INTEGER DEFAULT NULL,
                 title TEXT,
@@ -243,6 +243,17 @@ class DbHelper(val context: Context, factory: SQLiteDatabase.CursorFactory?) :
         db.close()
 
         return user
+    }
+
+    fun insertFavorite(userId: Long, lotId: Long): Long {
+        val db = writableDatabase
+        val contentValues = ContentValues().apply {
+            put("userId", userId)
+            put("lotId", lotId)
+        }
+        val insertedId = db.insert("Favorite", null, contentValues)
+        db.close()
+        return insertedId
     }
 
     fun testFillDB() {

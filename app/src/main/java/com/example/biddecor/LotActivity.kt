@@ -1,12 +1,15 @@
 package com.example.biddecor
 
 import android.annotation.SuppressLint
+import android.content.ContentValues
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
+import android.widget.CheckBox
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -52,5 +55,46 @@ class LotActivity : AppCompatActivity() {
             val intent = Intent(this, MainActivity::class.java)
             startActivity(intent)
         }
+
+        val checkBox = findViewById<CheckBox>(R.id.checkBox)
+        checkBox.setOnCheckedChangeListener { buttonView, isChecked ->
+            if (isChecked) {
+                val dbHelper = DbHelper(this, null)
+                val insertedId = dbHelper.insertFavorite(userId, lotId)
+                if (insertedId != -1L) {
+                    // Успешно добавлено
+                    Toast.makeText(this, "Лот було збережено", Toast.LENGTH_SHORT).show()
+                } else {
+                    // Ошибка добавления
+                    Toast.makeText(this, "Помилка при збережені лоту", Toast.LENGTH_SHORT).show()
+                }
+            } else {
+                removeFavorite()
+            }
+        }
+    }
+
+    fun addFavorite() {
+        val dbHelper = DbHelper(this, null)
+        val db = dbHelper.writableDatabase
+
+        val contentValues = ContentValues().apply {
+            put("column_name", "value")
+        }
+
+        db.insert("table_name", null, contentValues)
+        db.close()
+    }
+
+    fun removeFavorite() {
+        val dbHelper = DbHelper(this, null)
+        val db = dbHelper.writableDatabase
+
+        // Замените условие на нужное, чтобы удалить правильную запись
+        val selection = "column_name = ?"
+        val selectionArgs = arrayOf("value")
+
+        db.delete("table_name", selection, selectionArgs)
+        db.close()
     }
 }
