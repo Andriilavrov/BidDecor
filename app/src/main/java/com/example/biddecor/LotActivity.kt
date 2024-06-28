@@ -18,6 +18,9 @@ import com.example.biddecor.model.Bid
 import com.example.biddecor.model.User
 import org.json.JSONObject
 import java.io.File
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 class LotActivity : AppCompatActivity() {
     @SuppressLint("SetTextI18n")
@@ -39,6 +42,7 @@ class LotActivity : AppCompatActivity() {
         val exitBtn: Button = findViewById(R.id.lotExitButton)
         val image: ImageView = findViewById(R.id.imageView2)
 
+        //Get info from intent
         category.text = intent.getStringExtra("lotCategory")
         title.text = intent.getStringExtra("lotTitle")
         price.text = intent.getStringExtra("lotStartPrice") + " ₴"
@@ -50,14 +54,42 @@ class LotActivity : AppCompatActivity() {
             resources.getIdentifier(intent.getStringExtra("imageRef"), "drawable", packageName)
         image.setImageResource(resId)
 
+        fun getCurrentDateTime(): String {
+            val date = Date()
+            val formatter = SimpleDateFormat("dd.MM.yyyy HH:mm:ss", Locale.getDefault())
+            return formatter.format(date)
+        }
+
         bidButton.setOnClickListener {
             val editTextNumber: EditText = findViewById(R.id.editTextNumber)
-            val bidCost: String = editTextNumber.text.toString().trim()
-            val bidCostInt: Int = bidCost.toInt()
+            val preferrefBid: String = editTextNumber.text.toString().trim()
+            val bidValue: Int = preferrefBid.toInt()
+            val currentValue: Int = price.text.toString().trim().toInt()
+            if (bidValue < currentValue) {
+                Toast.makeText(
+                    this,
+                    "Неможливо зробити ставку, нижчу за поточну ціну!",
+                    Toast.LENGTH_LONG
+                ).show()
+            } else {
+                price.text = preferrefBid + " ₴"
+                editTextNumber.text.clear()
+                val db = DbHelper(this, null)
+                val bid = Bid(
+                    bidId = null,
+                    bidDate = getCurrentDateTime(),
+                    bidValue = bidValue,
+                    costumerId = 0,
+                    lotId = lotId
+                )
+                db.addBid(bid)
+            }
 
             price.text = bidCost + " ₴"
             editTextNumber.text.clear()
         }
+
+
 
         exitBtn.setOnClickListener {
             val intent = Intent(this, MainActivity::class.java)

@@ -1,5 +1,6 @@
 package com.example.biddecor
 
+import android.annotation.SuppressLint
 import android.content.ContentValues
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
@@ -158,7 +159,7 @@ class DbHelper(val context: Context, factory: SQLiteDatabase.CursorFactory?) :
 
     fun getAllLots(): ArrayList<Lot> {
         val db = this.readableDatabase
-        var lot: Lot? = null
+        var lot: Lot
         val list: ArrayList<Lot> = arrayListOf()
         val cursor = db.rawQuery("SELECT * FROM Lot", null)
 
@@ -216,6 +217,32 @@ class DbHelper(val context: Context, factory: SQLiteDatabase.CursorFactory?) :
         db.close()
     }
 
+    @SuppressLint("Range")
+    fun getBidById(id: Int): Bid? {
+        val db = this.readableDatabase
+        val cursor =
+            db.rawQuery("SELECT 1 FROM Bid WHERE bidId = '$id'", null)
+
+        val bid: Bid? = null
+        if (cursor.moveToFirst()) {
+            Bid(
+                bidId = cursor.getInt( cursor.getColumnIndex("ownerId")),
+                bidDate = cursor.getString( cursor.getColumnIndex("bidDate")),
+                bidValue = cursor.getInt(cursor.getColumnIndex("bidValue")),
+                costumerId = cursor.getInt(cursor.getColumnIndex("costumerId")),
+                lotId = cursor.getInt(cursor.getColumnIndex("lotId"))
+            )
+        }
+        return bid
+    }
+
+    fun getLastBid(): Bid?{
+
+
+        return null
+    }
+
+
     fun addMessage(message: Message) {
         val messageId = generateRandomId("messageId", "Message")
 
@@ -260,17 +287,19 @@ class DbHelper(val context: Context, factory: SQLiteDatabase.CursorFactory?) :
         val cursor = db.rawQuery("SELECT * FROM User WHERE email = ?", arrayOf(email))
 
         if (cursor.moveToFirst()) {
+            val userIdInd = cursor.getColumnIndex("userId")
             val userNameInd = cursor.getColumnIndex("userName")
             val userEmailInd = cursor.getColumnIndex("email")
             val userPasswordInd = cursor.getColumnIndex("password")
             val imageProfileRefInd = cursor.getColumnIndex("ImageProfileRef")
 
+            val userId = cursor.getInt(userIdInd)
             val userName = cursor.getString(userNameInd)
             val userEmail = cursor.getString(userEmailInd)
             val userPassword = cursor.getString(userPasswordInd)
             val imageProfileRef = cursor.getString(imageProfileRefInd)
 
-            user = User(null, userName, userEmail, userPassword, imageProfileRef)
+            user = User(userId, userName, userEmail, userPassword, imageProfileRef)
         }
 
         cursor.close()
@@ -298,15 +327,67 @@ class DbHelper(val context: Context, factory: SQLiteDatabase.CursorFactory?) :
         addUser(User(null, "John", "john@example.com", "12345678", null))
         addUser(User(null, "Emily", "emily@example.com", "12345678", null))
         addUser(User(null, "User", "user@example.com", "12345678", null))
-        addLot(Lot(null, 1, null, 2400, null, "Сучасний журнальний столик", "Цей сучасний журнальний столик стане стильним доповненням вашої вітальні. " +
-                "Прозора скляна поверхня створює враження простору і легкості, а міцна металева основа забезпечує стабільність. Ідеальний для розміщення книг, журналів та декоративних елементів. " +
-                "Додайте сучасного шарму до вашого інтер'єру.","04.07.2024", "Столи", "glass_table"))
-        addLot(Lot(null, 1, null, 1920, null, "Стіл 'SINGER'", "Стан: нове\nНаявність: в наявності\nПризначення: обідній\n" +
-                "Тип: класичний\n\nНовий. Не великі косметичні дефекти , вдавленості при транспортуванні.", "12.06.2024", "Столи", "table"))
-        addLot(Lot(null, 1, null, 870, null, "Вінтажний дерев'яний стілець", "Цей вінтажний дерев'яний стілець додає шарму будь-якому інтер'єру. Виготовлений " +
-                "з високоякісного дерева, він зберіг свій оригінальний блиск і міцність. Ідеально підходить для любителів ретро стилю та цінителів якісних меблів. ", "21.07.2024", "Стільці", "chair"))
-        addLot(Lot(null, 1, null, 1530, null, "Класичний дубовий обідній стіл", "Цей класичний дубовий обідній стіл втілює елегантність і міцність. " +
-                "Виготовлений з високоякісного дуба, він прослужить вам багато років. Простий, але елегантний дизайн дозволяє легко поєднувати його з будь-якими стільцями та декором. Ідеальний вибір для сімейних обідів " +
-                "та святкових вечерь.", "16.07.2024", "Столи", "wood_table"))
+        addLot(
+            Lot(
+                null,
+                1,
+                null,
+                2400,
+                null,
+                "Сучасний журнальний столик",
+                "Цей сучасний журнальний столик стане стильним доповненням вашої вітальні. " +
+                        "Прозора скляна поверхня створює враження простору і легкості, а міцна металева основа забезпечує стабільність. Ідеальний для розміщення книг, журналів та декоративних елементів. " +
+                        "Додайте сучасного шарму до вашого інтер'єру.",
+                "04.07.2024",
+                "Столи",
+                "glass_table"
+            )
+        )
+        addLot(
+            Lot(
+                null,
+                1,
+                null,
+                1920,
+                null,
+                "Стіл 'SINGER'",
+                "Стан: нове\nНаявність: в наявності\nПризначення: обідній\n" +
+                        "Тип: класичний\n\nНовий. Не великі косметичні дефекти , вдавленості при транспортуванні.",
+                "12.06.2024",
+                "Столи",
+                "table"
+            )
+        )
+        addLot(
+            Lot(
+                null,
+                1,
+                null,
+                870,
+                null,
+                "Вінтажний дерев'яний стілець",
+                "Цей вінтажний дерев'яний стілець додає шарму будь-якому інтер'єру. Виготовлений " +
+                        "з високоякісного дерева, він зберіг свій оригінальний блиск і міцність. Ідеально підходить для любителів ретро стилю та цінителів якісних меблів. ",
+                "21.07.2024",
+                "Стільці",
+                "chair"
+            )
+        )
+        addLot(
+            Lot(
+                null,
+                1,
+                null,
+                1530,
+                null,
+                "Класичний дубовий обідній стіл",
+                "Цей класичний дубовий обідній стіл втілює елегантність і міцність. " +
+                        "Виготовлений з високоякісного дуба, він прослужить вам багато років. Простий, але елегантний дизайн дозволяє легко поєднувати його з будь-якими стільцями та декором. Ідеальний вибір для сімейних обідів " +
+                        "та святкових вечерь.",
+                "16.07.2024",
+                "Столи",
+                "wood_table"
+            )
+        )
     }
 }
