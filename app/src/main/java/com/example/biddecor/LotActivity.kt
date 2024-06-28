@@ -18,6 +18,7 @@ import com.example.biddecor.model.Bid
 import com.example.biddecor.model.User
 import org.json.JSONObject
 import java.io.File
+import com.example.biddecor.model.Lot
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -82,6 +83,11 @@ class LotActivity : AppCompatActivity() {
                     lotId = lotId
                 )
                 db.addBid(bid)
+
+
+                val currentLot: Lot? = db.getLotById(lotId)
+                db.setLotById(lotId, currentLot)
+
             }
         }
 

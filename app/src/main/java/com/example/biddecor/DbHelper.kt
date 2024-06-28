@@ -129,13 +129,15 @@ class DbHelper(val context: Context, factory: SQLiteDatabase.CursorFactory?) :
         db.close()
     }
 
-    fun getAllLots(): ArrayList<Lot> {
+    fun getLotById(id: Int): Lot? {
         val db = this.readableDatabase
-        var lot: Lot
-        val list: ArrayList<Lot> = arrayListOf()
-        val cursor = db.rawQuery("SELECT * FROM Lot", null)
+        var lot: Lot? = null
+        val cursor = db.rawQuery("SELECT * FROM Lot WHERE lotId ='$id'", null)
+        if (cursor.moveToFirst()) {
 
-        while (cursor.moveToNext()) {
+            val lotIdInd = cursor.getColumnIndex("lotId")
+            val lotId = cursor.getInt(lotIdInd)
+
             val ownerIdInd = cursor.getColumnIndex("ownerId")
             val ownerId: Int = cursor.getInt(ownerIdInd)
 
@@ -157,10 +159,63 @@ class DbHelper(val context: Context, factory: SQLiteDatabase.CursorFactory?) :
             val imageInd = cursor.getColumnIndex("ImageDataRef")
             val imageRef = cursor.getString(imageInd)
 
+            val lastBidInd = cursor.getColumnIndex("bidId")
+            val lastBid = cursor.getInt(lastBidInd)
+
             lot = Lot(
-                null,
+                lotId,
                 ownerId,
+                lastBid,
+                startPrice,
                 null,
+                title,
+                description,
+                deadline,
+                category,
+                imageRef
+            )
+        }
+        return lot
+    }
+
+    fun getAllLots(): ArrayList<Lot> {
+        val db = this.readableDatabase
+        var lot: Lot
+        val list: ArrayList<Lot> = arrayListOf()
+        val cursor = db.rawQuery("SELECT * FROM Lot", null)
+
+        while (cursor.moveToNext()) {
+            val lotIdInd = cursor.getColumnIndex("lotId")
+            val lotId = cursor.getInt(lotIdInd)
+
+            val ownerIdInd = cursor.getColumnIndex("ownerId")
+            val ownerId: Int = cursor.getInt(ownerIdInd)
+
+            val startPriceInd = cursor.getColumnIndex("startPrice")
+            val startPrice: Int = cursor.getInt(startPriceInd)
+
+            val titleInd = cursor.getColumnIndex("title")
+            val title = cursor.getString(titleInd)
+
+            val descriptionInd = cursor.getColumnIndex("description")
+            val description = cursor.getString(descriptionInd)
+
+            val deadlineInd = cursor.getColumnIndex("deadline")
+            val deadline = cursor.getString(deadlineInd)
+
+            val categoryInd = cursor.getColumnIndex("category")
+            val category = cursor.getString(categoryInd)
+
+            val imageInd = cursor.getColumnIndex("ImageDataRef")
+            val imageRef = cursor.getString(imageInd)
+
+            val lastBidInd = cursor.getColumnIndex("bidId")
+            val lastBid = cursor.getInt(lastBidInd)
+
+            lot = Lot(
+                lotId,
+                ownerId,
+                lastBid,
                 startPrice,
                 null,
                 title,
@@ -174,6 +229,21 @@ class DbHelper(val context: Context, factory: SQLiteDatabase.CursorFactory?) :
         cursor.close()
         db.close()
         return list
+    }
+
+    fun setLotById(id: Int, lot: Lot?){
+        val values = ContentValues()
+        values.put("ownerId", lot?.ownerId)
+        values.put("startPrice", lot?.startPrice)
+        values.put("title", lot?.title)
+        values.put("bidId", lot?.lastBid)
+        values.put("description", lot?.description)
+        values.put("deadline", lot?.deadline)
+        values.put("category", lot?.category)
+        values.put("ImageDataRef", lot?.ImageDataRef)
+
+        val db = this.writableDatabase
+        db.update("Lot", values, "id = ?", arrayOf(id.toString()))
     }
 
     fun addBid(bid: Bid) {
@@ -198,13 +268,32 @@ class DbHelper(val context: Context, factory: SQLiteDatabase.CursorFactory?) :
         val bid: Bid? = null
         if (cursor.moveToFirst()) {
             Bid(
-                bidId = cursor.getInt( cursor.getColumnIndex("ownerId")),
-                bidDate = cursor.getString( cursor.getColumnIndex("bidDate")),
+                bidId = cursor.getInt(cursor.getColumnIndex("ownerId")),
+                bidDate = cursor.getString(cursor.getColumnIndex("bidDate")),
                 bidValue = cursor.getInt(cursor.getColumnIndex("bidValue")),
                 costumerId = cursor.getInt(cursor.getColumnIndex("costumerId")),
                 lotId = cursor.getInt(cursor.getColumnIndex("lotId"))
             )
         }
+        return bid
+    }
+
+    @SuppressLint("Range")
+    fun getLastBid(): Bid? {
+        val db = this.readableDatabase
+        val cursor =
+            db.rawQuery("SELECT * FROM Bid ORDER BY id DESC LIMIT 1", null)
+        val bid: Bid? = null
+        if (cursor.moveToFirst()) {
+            Bid(
+                bidId = cursor.getInt(cursor.getColumnIndex("ownerId")),
+                bidDate = cursor.getString(cursor.getColumnIndex("bidDate")),
+                bidValue = cursor.getInt(cursor.getColumnIndex("bidValue")),
+                costumerId = cursor.getInt(cursor.getColumnIndex("costumerId")),
+                lotId = cursor.getInt(cursor.getColumnIndex("lotId"))
+            )
+        }
+
         return bid
     }
 
