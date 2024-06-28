@@ -12,6 +12,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.example.biddecor.model.Bid
+import com.example.biddecor.model.Lot
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -77,6 +78,11 @@ class LotActivity : AppCompatActivity() {
                     lotId = lotId
                 )
                 db.addBid(bid)
+
+
+                val currentLot: Lot? = db.getLotById(lotId)
+                db.setLotById(lotId, currentLot)
+
             }
 
 
