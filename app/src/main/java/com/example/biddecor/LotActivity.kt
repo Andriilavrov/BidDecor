@@ -42,7 +42,6 @@ class LotActivity : AppCompatActivity() {
         val exitBtn: Button = findViewById(R.id.lotExitButton)
         val image: ImageView = findViewById(R.id.imageView2)
 
-        //Get info from intent
         category.text = intent.getStringExtra("lotCategory")
         title.text = intent.getStringExtra("lotTitle")
         price.text = intent.getStringExtra("lotStartPrice") + " ₴"
@@ -84,27 +83,30 @@ class LotActivity : AppCompatActivity() {
                 )
                 db.addBid(bid)
             }
-
-            price.text = bidCost + " ₴"
-            editTextNumber.text.clear()
         }
-
-
 
         exitBtn.setOnClickListener {
             val intent = Intent(this, MainActivity::class.java)
             startActivity(intent)
         }
 
+        val db = DbHelper(this, null)
+        val jsonFilePath = File(filesDir, "user.json")
+        val jsonString = jsonFilePath.readText()
+        val jsonObject = JSONObject(jsonString)
+        val email = jsonObject.getString("email")
+        val user: User? = db.getUserByEmail(email)
+
         val checkBox = findViewById<CheckBox>(R.id.checkBox)
+
+        val favoriteId = favId(user?.userId, lotId)
+
+        if (favoriteId != -1){
+            checkBox.isChecked = true
+        }
+
         checkBox.setOnCheckedChangeListener { buttonView, isChecked ->
             if (isChecked) {
-                val db = DbHelper(this, null)
-                val jsonFilePath = File(filesDir, "user.json")
-                val jsonString = jsonFilePath.readText()
-                val jsonObject = JSONObject(jsonString)
-                val email = jsonObject.getString("email")
-                val user: User? = db.getUserByEmail(email)
                 val insertedId = db.insertFavorite(user?.userId, lotId)
                 if (insertedId != -1) {
                     Toast.makeText(this, "Лот було збережено", Toast.LENGTH_SHORT).show()
@@ -112,32 +114,29 @@ class LotActivity : AppCompatActivity() {
                     Toast.makeText(this, "Помилка при збережені лоту", Toast.LENGTH_SHORT).show()
                 }
             } else {
-                removeFavorite()
+                db.removeFavorite(favoriteId)
             }
         }
     }
 
-    fun addFavorite() {
-        val dbHelper = DbHelper(this, null)
-        val db = dbHelper.writableDatabase
+    fun favId(userId: Int?, lotId: Int): Int {
+        if (userId == null){
+            return -1
+        }
+        val database = DbHelper(this, null)
+        val db = database.readableDatabase
+        val query = "SELECT favoriteId FROM Favorite WHERE userId = ? AND lotId = ?"
+        val cursor = db.rawQuery(query, arrayOf(userId.toString(), lotId.toString()))
 
-        val contentValues = ContentValues().apply {
-            put("column_name", "value")
+        var favoriteId: Int = -1
+
+        if (cursor.moveToFirst()) {
+            val colInd = cursor.getColumnIndex("favoriteId")
+            favoriteId = cursor.getInt(colInd)
         }
 
-        db.insert("table_name", null, contentValues)
+        cursor.close()
         db.close()
-    }
-
-    fun removeFavorite() {
-        val dbHelper = DbHelper(this, null)
-        val db = dbHelper.writableDatabase
-
-        // Замените условие на нужное, чтобы удалить правильную запись
-        val selection = "column_name = ?"
-        val selectionArgs = arrayOf("value")
-
-        db.delete("table_name", selection, selectionArgs)
-        db.close()
+        return favoriteId
     }
 }

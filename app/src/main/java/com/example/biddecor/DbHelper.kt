@@ -19,7 +19,7 @@ class DbHelper(val context: Context, factory: SQLiteDatabase.CursorFactory?) :
         db.execSQL(
             """
             CREATE TABLE User (
-                userId INTEGER PRIMARY KEY,
+                userId INTEGER PRIMARY KEY AUTOINCREMENT,
                 userName TEXT,
                 email TEXT,
                 password TEXT,
@@ -30,7 +30,7 @@ class DbHelper(val context: Context, factory: SQLiteDatabase.CursorFactory?) :
         db.execSQL(
             """
             CREATE TABLE Lot (
-                lotId INTEGER PRIMARY KEY,
+                lotId INTEGER PRIMARY KEY AUTOINCREMENT,
                 ownerId INTEGER,
                 bidId INTEGER DEFAULT NULL,
                 startPrice INTEGER,
@@ -48,7 +48,7 @@ class DbHelper(val context: Context, factory: SQLiteDatabase.CursorFactory?) :
         db.execSQL(
             """
             CREATE TABLE Bid (
-                bidId INTEGER PRIMARY KEY,
+                bidId INTEGER PRIMARY KEY AUTOINCREMENT,
                 bidDate TEXT,
                 bidValue INTEGER,
                 userId INTEGER,
@@ -59,7 +59,7 @@ class DbHelper(val context: Context, factory: SQLiteDatabase.CursorFactory?) :
         db.execSQL(
             """
             CREATE TABLE Message (
-                messageId INTEGER PRIMARY KEY,
+                messageId INTEGER PRIMARY KEY AUTOINCREMENT,
                 customerId INTEGER,
                 ownerId INTEGER,
                 lotId INTEGER,
@@ -73,7 +73,7 @@ class DbHelper(val context: Context, factory: SQLiteDatabase.CursorFactory?) :
         db.execSQL(
             """
             CREATE TABLE Favorite (
-                favoriteId INTEGER PRIMARY KEY,
+                favoriteId INTEGER PRIMARY KEY AUTOINCREMENT,
                 userId INTEGER,
                 lotId INTEGER,
                 FOREIGN KEY (userId) REFERENCES User(userId),
@@ -101,33 +101,8 @@ class DbHelper(val context: Context, factory: SQLiteDatabase.CursorFactory?) :
         onCreate(db)
     }
 
-    fun generateRandomId(columnName: String, tableName: String): Int {
-        val random = Random()
-        var id = random.nextInt(65536)
-
-        while (isIdExists(id.toLong(), columnName, tableName)) {
-            id = random.nextInt(65536)
-        }
-
-        return id
-    }
-
-    fun isIdExists(id: Long, columnName: String, tableName: String): Boolean {
-        val db = readableDatabase
-        val query = "SELECT $columnName FROM $tableName WHERE $columnName = ?"
-        val cursor = db.rawQuery(query, arrayOf(id.toString()))
-        val exists = cursor.count > 0
-        cursor.close()
-        db.close()
-        return exists
-    }
-
-
     fun addUser(user: User) {
-        user.userId = generateRandomId("userId", "User")
-
         val values = ContentValues()
-        values.put("userId", user.userId)
         values.put("userName", user.userName)
         values.put("email", user.email)
         values.put("password", user.password)
@@ -139,10 +114,7 @@ class DbHelper(val context: Context, factory: SQLiteDatabase.CursorFactory?) :
     }
 
     fun addLot(lot: Lot) {
-        val lotId = generateRandomId("lotId", "Lot")
-
         val values = ContentValues()
-        values.put("lotId", lotId)
         values.put("ownerId", lot.ownerId)
         values.put("startPrice", lot.startPrice)
         values.put("title", lot.title)
@@ -236,18 +208,9 @@ class DbHelper(val context: Context, factory: SQLiteDatabase.CursorFactory?) :
         return bid
     }
 
-    fun getLastBid(): Bid?{
-
-
-        return null
-    }
-
 
     fun addMessage(message: Message) {
-        val messageId = generateRandomId("messageId", "Message")
-
         val values = ContentValues()
-        values.put("messageId", messageId)
         values.put("customerId", message.customerId)
         values.put("ownerId", message.ownerId)
         values.put("lotId", message.lotId)
@@ -260,10 +223,7 @@ class DbHelper(val context: Context, factory: SQLiteDatabase.CursorFactory?) :
     }
 
     fun addFavorite(favorite: Favorite) {
-        val favoriteId = generateRandomId("favoriteId", "Favorite")
-
         val values = ContentValues()
-        values.put("favoriteId", favoriteId)
         values.put("userId", favorite.userId)
         values.put("lotId", favorite.lotId)
 
@@ -320,6 +280,14 @@ class DbHelper(val context: Context, factory: SQLiteDatabase.CursorFactory?) :
         val insertedId = db.insert("Favorite", null, contentValues)
         db.close()
         return insertedId.toInt()
+    }
+
+    fun removeFavorite(favoriteId: Int) {
+        val db = writableDatabase
+        val sql = "DELETE FROM Favorite WHERE favoriteId = ?"
+        val whereArgs = arrayOf(favoriteId.toString())
+        val deletedRows = db.execSQL(sql, whereArgs)
+        db.close()
     }
 
     fun testFillDB() {
