@@ -29,12 +29,8 @@ class AuctionsFragment : Fragment() {
     ): View {
         val auctionsViewModel =
             ViewModelProvider(this).get(AuctionsViewModel::class.java)
-
         _binding = FragmentAuctionsBinding.inflate(inflater, container, false)
         val root: View = binding.root
-
-
-
         return root
     }
 

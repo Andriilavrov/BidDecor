@@ -121,6 +121,7 @@ class LotActivity : AppCompatActivity() {
                 }
             } else {
                 db.removeFavorite(favoriteId)
+                Toast.makeText(this, "Лот було видалено зі збережених", Toast.LENGTH_SHORT).show()
             }
         }
     }
