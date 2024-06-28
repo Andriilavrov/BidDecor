@@ -41,7 +41,7 @@ class AuctionsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val lotsList: RecyclerView? = view?.findViewById(R.id.lotsList)
+        var lotsList: RecyclerView? = view.findViewById(R.id.lotsList)
         val db = DbHelper(requireContext(), null)
         val lots: ArrayList<Lot> = db.getAllLots()
         lotsList?.layoutManager = LinearLayoutManager(requireContext())

@@ -3,7 +3,7 @@ package com.example.biddecor.model
 class Lot(
     val lotId: Int?,
     val ownerId: Int,
-    val lastBid: Int?,
+    var lastBid: Int?,
     val startPrice: Int,
     val buyOutPrice: Int?,
     val title : String,

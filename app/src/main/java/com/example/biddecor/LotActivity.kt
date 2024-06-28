@@ -30,12 +30,17 @@ class LotActivity : AppCompatActivity() {
 
         val category: TextView = findViewById(R.id.lotCategory)
         val title: TextView = findViewById(R.id.lotTitle)
-        val price: TextView = findViewById(R.id.lotCurrentPrice)
+        var price: TextView = findViewById(R.id.lotCurrentPrice)
         val deadline: TextView = findViewById(R.id.lotDeadline)
         val bidButton: Button = findViewById(R.id.bidButton)
         val description: TextView = findViewById(R.id.lotDescriprion)
         val exitBtn: Button = findViewById(R.id.lotExitButton)
         val image: ImageView = findViewById(R.id.imageView2)
+
+        exitBtn.setOnClickListener {
+            val intent = Intent(this, MainActivity::class.java)
+            startActivity(intent)
+        }
 
         //Get info from intent
         category.text = intent.getStringExtra("lotCategory")
@@ -49,6 +54,7 @@ class LotActivity : AppCompatActivity() {
             resources.getIdentifier(intent.getStringExtra("imageRef"), "drawable", packageName)
         image.setImageResource(resId)
 
+
         fun getCurrentDateTime(): String {
             val date = Date()
             val formatter = SimpleDateFormat("dd.MM.yyyy HH:mm:ss", Locale.getDefault())
@@ -59,7 +65,8 @@ class LotActivity : AppCompatActivity() {
             val editTextNumber: EditText = findViewById(R.id.editTextNumber)
             val preferrefBid: String = editTextNumber.text.toString().trim()
             val bidValue: Int = preferrefBid.toInt()
-            val currentValue: Int = price.text.toString().trim().toInt()
+            val currentValueS: String = price.text.toString().trim()
+            val currentValue: Int = currentValueS.dropLast(2).toInt()
             if (bidValue < currentValue) {
                 Toast.makeText(
                     this,
@@ -78,21 +85,13 @@ class LotActivity : AppCompatActivity() {
                     lotId = lotId
                 )
                 db.addBid(bid)
-
-
-                val currentLot: Lot? = db.getLotById(lotId)
-                db.setLotById(lotId, currentLot)
-
+//                val lastBid: Bid? = db.getLastBid()
+//                var currentLot: Lot? = db.getLotById(lotId)
+//                currentLot?.lastBid = lastBid?.bidId
+//                db.setLotById(lotId, currentLot)
             }
 
 
-        }
-
-
-
-        exitBtn.setOnClickListener {
-            val intent = Intent(this, MainActivity::class.java)
-            startActivity(intent)
         }
     }
 }

@@ -40,7 +40,7 @@ class LotsAdapter(val lots: List<Lot>, var context: Context) :
         val db = DbHelper(context, null)
         val lastBid: Bid? = db.getBidById(1)
 
-        holder.price.text = lots[position].startPrice.toString()
+        holder.price.text = "Стартова ціна: " + lots[position].startPrice.toString() + " ₴"
         holder.deadline.text = lots[position].deadline
         val resId = context.resources.getIdentifier(lots[position].ImageDataRef, "drawable", context.packageName)
         holder.image.setImageResource(resId)

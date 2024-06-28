@@ -51,6 +51,7 @@ class DbHelper(val context: Context, factory: SQLiteDatabase.CursorFactory?) :
                 bidDate TEXT,
                 bidValue INTEGER,
                 userId INTEGER,
+                lotId INTEGER,
                 FOREIGN KEY (userId) REFERENCES User(userId)
             );
             """
@@ -231,19 +232,15 @@ class DbHelper(val context: Context, factory: SQLiteDatabase.CursorFactory?) :
         return list
     }
 
-    fun setLotById(id: Int, lot: Lot?){
-        val values = ContentValues()
-        values.put("ownerId", lot?.ownerId)
-        values.put("startPrice", lot?.startPrice)
-        values.put("title", lot?.title)
-        values.put("bidId", lot?.lastBid)
-        values.put("description", lot?.description)
-        values.put("deadline", lot?.deadline)
-        values.put("category", lot?.category)
-        values.put("ImageDataRef", lot?.ImageDataRef)
+    fun setLotById(id: Int, lot: Lot?) {
 
         val db = this.writableDatabase
-        db.update("Lot", values, "id = ?", arrayOf(id.toString()))
+        val values = ContentValues().apply {
+            put("bidId", lot?.lastBid)
+        }
+        db.update("Lot", values, "lotId = ?", arrayOf(id.toString()))
+
+
     }
 
     fun addBid(bid: Bid) {
@@ -255,8 +252,6 @@ class DbHelper(val context: Context, factory: SQLiteDatabase.CursorFactory?) :
 
         val db = this.writableDatabase
         db.insert("Bid", null, values)
-
-        db.close()
     }
 
     @SuppressLint("Range")
@@ -268,7 +263,7 @@ class DbHelper(val context: Context, factory: SQLiteDatabase.CursorFactory?) :
         val bid: Bid? = null
         if (cursor.moveToFirst()) {
             Bid(
-                bidId = cursor.getInt(cursor.getColumnIndex("ownerId")),
+                bidId = cursor.getInt(cursor.getColumnIndex("bidId")),
                 bidDate = cursor.getString(cursor.getColumnIndex("bidDate")),
                 bidValue = cursor.getInt(cursor.getColumnIndex("bidValue")),
                 costumerId = cursor.getInt(cursor.getColumnIndex("costumerId")),
@@ -282,14 +277,14 @@ class DbHelper(val context: Context, factory: SQLiteDatabase.CursorFactory?) :
     fun getLastBid(): Bid? {
         val db = this.readableDatabase
         val cursor =
-            db.rawQuery("SELECT * FROM Bid ORDER BY id DESC LIMIT 1", null)
-        val bid: Bid? = null
+            db.rawQuery("SELECT * FROM Bid ORDER BY bidId DESC LIMIT 1", null)
+        var bid: Bid? = null
         if (cursor.moveToFirst()) {
-            Bid(
-                bidId = cursor.getInt(cursor.getColumnIndex("ownerId")),
+            bid = Bid(
+                bidId = cursor.getInt(cursor.getColumnIndex("bidId")),
                 bidDate = cursor.getString(cursor.getColumnIndex("bidDate")),
                 bidValue = cursor.getInt(cursor.getColumnIndex("bidValue")),
-                costumerId = cursor.getInt(cursor.getColumnIndex("costumerId")),
+                costumerId = cursor.getInt(cursor.getColumnIndex("userId")),
                 lotId = cursor.getInt(cursor.getColumnIndex("lotId"))
             )
         }
