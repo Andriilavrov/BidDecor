@@ -85,7 +85,7 @@ class LotActivity : AppCompatActivity() {
                     costumerId = 0,
                     lotId = lotId
                 )
-                db.addBid(bid)
+//                db.addBid(bid)
 //                val lastBid: Bid? = db.getLastBid()
 //                var currentLot: Lot? = db.getLotById(lotId)
 //                currentLot?.lastBid = lastBid?.bidId
