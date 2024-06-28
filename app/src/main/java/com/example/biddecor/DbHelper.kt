@@ -10,6 +10,9 @@ import com.example.biddecor.model.Favorite
 import com.example.biddecor.model.Lot
 import com.example.biddecor.model.Message
 import com.example.biddecor.model.User
+import org.json.JSONObject
+import java.io.File
+import java.util.Random
 
 class DbHelper(val context: Context, factory: SQLiteDatabase.CursorFactory?) :
     SQLiteOpenHelper(context, "biddecor", factory, 1) {
@@ -31,7 +34,7 @@ class DbHelper(val context: Context, factory: SQLiteDatabase.CursorFactory?) :
             CREATE TABLE Lot (
                 lotId INTEGER PRIMARY KEY AUTOINCREMENT,
                 ownerId INTEGER,
-                bidId INTEGER,
+                bidId INTEGER DEFAULT NULL,
                 startPrice INTEGER,
                 buyOutPrice INTEGER DEFAULT NULL,
                 title TEXT,
@@ -110,7 +113,6 @@ class DbHelper(val context: Context, factory: SQLiteDatabase.CursorFactory?) :
 
         val db = this.writableDatabase
         db.insert("User", null, values)
-
         db.close()
     }
 
@@ -135,7 +137,6 @@ class DbHelper(val context: Context, factory: SQLiteDatabase.CursorFactory?) :
         var lot: Lot? = null
         val cursor = db.rawQuery("SELECT * FROM Lot WHERE lotId ='$id'", null)
         if (cursor.moveToFirst()) {
-
             val lotIdInd = cursor.getColumnIndex("lotId")
             val lotId = cursor.getInt(lotIdInd)
 
@@ -178,6 +179,87 @@ class DbHelper(val context: Context, factory: SQLiteDatabase.CursorFactory?) :
         }
         return lot
     }
+
+    fun getFavorLotIds(userId: Int): List<Int> {
+        val lotIds = mutableListOf<Int>()
+        val db = readableDatabase
+        val query = "SELECT lotId FROM Favorite WHERE userId = ?"
+        val cursor = db.rawQuery(query, arrayOf(userId.toString()))
+
+        while (cursor.moveToNext()) {
+            val colInd = cursor.getColumnIndex("lotId")
+            val lotId = cursor.getInt(colInd)
+            lotIds.add(lotId)
+        }
+
+        cursor.close()
+        db.close()
+
+        return lotIds
+    }
+
+    fun getFavorLots(): ArrayList<Lot> {
+        val jsonFilePath = File(context?.filesDir, "user.json")
+        val jsonString = jsonFilePath.readText()
+        val jsonObject = JSONObject(jsonString)
+        val email = jsonObject.getString("email")
+        val user: User? = this.getUserByEmail(email)
+        val lotIds = getFavorLotIds(user?.userId ?: -1)
+
+        val db = this.readableDatabase
+        var lot: Lot
+        val list: ArrayList<Lot> = arrayListOf()
+        val cursor = db.rawQuery("SELECT * FROM Lot", null)
+
+        while (cursor.moveToNext()) {
+            val lotIdInd = cursor.getColumnIndex("lotId")
+            val lotId = cursor.getInt(lotIdInd)
+
+            val ownerIdInd = cursor.getColumnIndex("ownerId")
+            val ownerId: Int = cursor.getInt(ownerIdInd)
+
+            val startPriceInd = cursor.getColumnIndex("startPrice")
+            val startPrice: Int = cursor.getInt(startPriceInd)
+
+            val titleInd = cursor.getColumnIndex("title")
+            val title = cursor.getString(titleInd)
+
+            val descriptionInd = cursor.getColumnIndex("description")
+            val description = cursor.getString(descriptionInd)
+
+            val deadlineInd = cursor.getColumnIndex("deadline")
+            val deadline = cursor.getString(deadlineInd)
+
+            val categoryInd = cursor.getColumnIndex("category")
+            val category = cursor.getString(categoryInd)
+
+            val imageInd = cursor.getColumnIndex("ImageDataRef")
+            val imageRef = cursor.getString(imageInd)
+
+            val lastBidInd = cursor.getColumnIndex("bidId")
+            val lastBid = cursor.getInt(lastBidInd)
+
+            lot = Lot(
+                lotId,
+                ownerId,
+                lastBid,
+                startPrice,
+                null,
+                title,
+                description,
+                deadline,
+                category,
+                imageRef
+            )
+            if (lot.lotId in lotIds) {
+                list.add(lot)
+            }
+        }
+        cursor.close()
+        db.close()
+        return list
+    }
+
 
     fun getAllLots(): ArrayList<Lot> {
         val db = this.readableDatabase
@@ -233,7 +315,7 @@ class DbHelper(val context: Context, factory: SQLiteDatabase.CursorFactory?) :
     }
 
     fun setLotById(id: Int, lot: Lot?) {
-
+        
         val db = this.writableDatabase
         val values = ContentValues().apply {
             put("bidId", lot?.lastBid)
@@ -350,6 +432,28 @@ class DbHelper(val context: Context, factory: SQLiteDatabase.CursorFactory?) :
         db.close()
 
         return user
+    }
+
+    fun insertFavorite(userId: Int?, lotId: Int): Int {
+        if (userId == null) {
+            return -1
+        }
+        val db = writableDatabase
+        val contentValues = ContentValues().apply {
+            put("userId", userId)
+            put("lotId", lotId)
+        }
+        val insertedId = db.insert("Favorite", null, contentValues)
+        db.close()
+        return insertedId.toInt()
+    }
+
+    fun removeFavorite(favoriteId: Int) {
+        val db = writableDatabase
+        val sql = "DELETE FROM Favorite WHERE favoriteId = ?"
+        val whereArgs = arrayOf(favoriteId.toString())
+        val deletedRows = db.execSQL(sql, whereArgs)
+        db.close()
     }
 
     fun testFillDB() {

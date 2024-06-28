@@ -1,17 +1,23 @@
 package com.example.biddecor
 
 import android.annotation.SuppressLint
+import android.content.ContentValues
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
+import android.widget.CheckBox
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.example.biddecor.model.Bid
+import com.example.biddecor.model.User
+import org.json.JSONObject
+import java.io.File
 import com.example.biddecor.model.Lot
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -37,12 +43,7 @@ class LotActivity : AppCompatActivity() {
         val exitBtn: Button = findViewById(R.id.lotExitButton)
         val image: ImageView = findViewById(R.id.imageView2)
 
-        exitBtn.setOnClickListener {
-            val intent = Intent(this, MainActivity::class.java)
-            startActivity(intent)
-        }
 
-        //Get info from intent
         category.text = intent.getStringExtra("lotCategory")
         title.text = intent.getStringExtra("lotTitle")
         price.text = intent.getStringExtra("lotStartPrice") + " ₴"
@@ -90,8 +91,61 @@ class LotActivity : AppCompatActivity() {
 //                currentLot?.lastBid = lastBid?.bidId
 //                db.setLotById(lotId, currentLot)
             }
-
-
         }
+
+        exitBtn.setOnClickListener {
+            val intent = Intent(this, MainActivity::class.java)
+            startActivity(intent)
+        }
+
+        val db = DbHelper(this, null)
+        val jsonFilePath = File(filesDir, "user.json")
+        val jsonString = jsonFilePath.readText()
+        val jsonObject = JSONObject(jsonString)
+        val email = jsonObject.getString("email")
+        val user: User? = db.getUserByEmail(email)
+
+        val checkBox = findViewById<CheckBox>(R.id.checkBox)
+
+        val favoriteId = favId(user?.userId, lotId)
+
+        if (favoriteId != -1){
+            checkBox.isChecked = true
+        }
+
+        checkBox.setOnCheckedChangeListener { buttonView, isChecked ->
+            if (isChecked) {
+                val insertedId = db.insertFavorite(user?.userId, lotId)
+                if (insertedId != -1) {
+                    Toast.makeText(this, "Лот було збережено", Toast.LENGTH_SHORT).show()
+                } else {
+                    Toast.makeText(this, "Помилка при збережені лоту", Toast.LENGTH_SHORT).show()
+                }
+            } else {
+                db.removeFavorite(favoriteId)
+                Toast.makeText(this, "Лот було видалено зі збережених", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
+    fun favId(userId: Int?, lotId: Int): Int {
+        if (userId == null){
+            return -1
+        }
+        val database = DbHelper(this, null)
+        val db = database.readableDatabase
+        val query = "SELECT favoriteId FROM Favorite WHERE userId = ? AND lotId = ?"
+        val cursor = db.rawQuery(query, arrayOf(userId.toString(), lotId.toString()))
+
+        var favoriteId: Int = -1
+
+        if (cursor.moveToFirst()) {
+            val colInd = cursor.getColumnIndex("favoriteId")
+            favoriteId = cursor.getInt(colInd)
+        }
+
+        cursor.close()
+        db.close()
+        return favoriteId
     }
 }
